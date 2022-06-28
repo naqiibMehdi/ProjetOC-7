@@ -1,6 +1,4 @@
 const express = require("express")
-const mongoose = require("mongoose")
-const dotenv = require("dotenv")
 const path = require("path")
 const authRoute = require("./routes/users")
 
@@ -16,7 +14,6 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use("/images", express.static(path.join(__dirname, "images")))
 
 app.use("/api/auth", authRoute)
 
