@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Form from '../views/VueForm.vue'
-
+import Form from "@/views/ViewForm.vue"
 const routes = [
   {
     path: '/',
