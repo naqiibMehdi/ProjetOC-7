@@ -1,6 +1,6 @@
 <template>
-  <route-link to="/login">Se connecter</route-link>
-  <route-link to="/signup">S'inscrire</route-link>
+  <router-link to="/">Créer un compte</router-link>
+  <router-link to="/login">Se connecter</router-link>
 </template>
 
 <script>

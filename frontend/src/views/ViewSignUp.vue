@@ -1,15 +1,10 @@
 <template>
-<Header />
+  <Header />
   <div class="form">
-    <form action="">
+    <form method="POST" @submit.prevent="fetchSignup()">
+
       <div class="fields">
-        <input
-          type="text"
-          name="name"
-          placeholder="Nom"
-          v-model="name"
-          @input="handleErrorName"
-        />
+        <input type="text" name="name" placeholder="Nom" v-model="name" />
         <span v-show="errors.name">{{ errors.name }}</span>
 
         <input
@@ -26,18 +21,17 @@
           name="email"
           placeholder="ex:exemple@domaine.com"
           v-model="email"
-          @input="handleErrorEmail"
         />
-        <span></span>
+        <span v-show="errors.email">{{ errors.email }}</span>
 
         <input
           type="password"
           name="password"
           placeholder="Mot de passe"
           v-model="password"
-          @input="handleErrorName"
+          @input="checkPassword"
         />
-        <span></span>
+        <span v-show="errors.password">{{ checkPassword() }}</span>
 
         <button type="submit">Créer un compte</button>
       </div>
@@ -46,36 +40,41 @@
 </template>
 
 <script>
-import Header from "@/components/Header.vue"
+import Header from "@/components/Header.vue";
+import axios from "axios"
 
 export default {
-  name: "Form",
-  components: {Header},
+  name: "Signup",
+  components: { Header },
   data() {
     return {
       name: "",
       firstname: "",
       email: "",
       password: "",
-      errors: {},
+      errors: {password: null}
     };
   },
   methods: {
-    handleErrorName() {
-      if (!/^[a-zA-Z]*$/.test(this.name)) {
-        return (this.errors.name = "Nom saisie incorrecte !");
-      } else {
-        return (this.errors.name = "");
+    checkPassword() {
+      if(!/^[\w\d-_*$/\\*]{8,}$/.test(this.password)){
+        return this.errors.password = "Votre mot de passe doit comporter au moins 8 caractères"
+      }else{
+        return ""
       }
     },
 
-    handleErrorFirstName() {
-      if (!/^[a-zA-Z]*$/.test(this.firstname)) {
-        return (this.errors.firstname = "Prénom saisie incorrecte !");
-      } else {
-        return (this.errors.firstname = "");
-      }
-    },
+    fetchSignup() {
+      axios.post("http://localhost:3000/api/auth/signup", {
+        name: this.name,
+        firstname: this.firstname,
+        email: this.email,
+        password: this.password,
+        isadmin: 0
+      })
+      .then(response => console.log(response.data))
+      .catch(err => (this.errors = err.response.data))
+    }
   },
 };
 </script>
