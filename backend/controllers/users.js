@@ -31,7 +31,11 @@ exports.signup = (req, res) => {
 
 exports.login = async (req, res) => {
   
+  if(!req.body.email || !req.body.password){
+    return res.status(400).json({message: "Veuillez remplir tous les champs !"})
+  }
     const user = await User.findOne({where: {email: req.body.email}})
+    const token = jwt.sign({id: user.id}, process.env.KEY, {expiresIn: "24h"})
     
     if(!user){
       return res.status(400).json({message: "Cet email n'existe pas"})
@@ -43,10 +47,11 @@ exports.login = async (req, res) => {
       return res.status(400).json({message: "mot de passe incorrecte"})
     }
 
+
+    res.cookie("jwt", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24})
     res.status(200).json({
-      id: user.id,
-      isadmin: user.isadmin,
-      token: jwt.sign({id: user.id}, process.env.KEY, {expiresIn: "24h"})
+      idUser: user.id,
+      isadmin: user.isadmin
 
     })
 

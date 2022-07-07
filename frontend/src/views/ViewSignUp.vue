@@ -72,7 +72,7 @@ export default {
         password: this.password,
         isadmin: 0
       })
-      .then(response => console.log(response.data))
+      .then(response => this.$router.push("/login"))
       .catch(err => (this.errors = err.response.data))
     }
   },

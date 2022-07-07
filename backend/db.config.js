@@ -5,7 +5,8 @@ dotenv.config()
 
 const sequelize = new Sequelize(process.env.DB, process.env.DBUSER, process.env.DBPASSWORD, {
   host: process.env.DBHOST,
-  dialect: 'mariadb'
+  dialect: 'mariadb',
+  timezone: "+02:00"
 });
 
 

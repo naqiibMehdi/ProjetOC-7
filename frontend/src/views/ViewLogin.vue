@@ -1,7 +1,7 @@
 <template>
   <Header />
   <div class="form">
-    <form method="POST" @submit.prevent="">
+    <form method="POST" @submit.prevent="fetchLogin">
       <div class="fields">
         <input
           type="text"
@@ -42,13 +42,13 @@ export default {
   },
   methods: {
 
-    fetchSignup() {
+    fetchLogin() {
       axios.post("http://localhost:3000/api/auth/login", {
         email: this.email,
         password: this.password,
       })
       .then(response => console.log(response.data))
-      .catch(err => (this.errors = err.response.data))
+      .catch(err => console.log(err.response))
     }
   },
 };

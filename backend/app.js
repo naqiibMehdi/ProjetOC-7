@@ -1,6 +1,7 @@
 const express = require("express")
 const path = require("path")
 const authRoute = require("./routes/users")
+const blogsRoute = require("./routes/blogs")
 
 
 const app = express()
@@ -16,5 +17,6 @@ app.use((req, res, next) => {
 
 
 app.use("/api/auth", authRoute)
+app.use("/api", blogsRoute)
 
 module.exports = app
