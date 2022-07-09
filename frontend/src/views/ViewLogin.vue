@@ -1,7 +1,7 @@
 <template>
   <Header />
   <div class="form">
-    <form method="POST" @submit.prevent="fetchLogin">
+    <form method="POST" @submit.prevent="fetchLogin()">
       <div class="fields">
         <input
           type="text"
@@ -15,13 +15,17 @@
           name="password"
           placeholder="Mot de passe"
           v-model="password"
-          @input="checkPassword"
         />
 
         <button type="submit">Se connecter</button>
       </div>
+
+      <div class="errors" v-if="errors">
+        {{ errors.message }}
+      </div>
     </form>
   </div>
+
 </template>
 
 <script>
@@ -33,11 +37,9 @@ export default {
   components: { Header },
   data() {
     return {
-      name: "",
-      firstname: "",
       email: "",
       password: "",
-      errors: {password: null}
+      errors: {}
     };
   },
   methods: {
@@ -47,8 +49,8 @@ export default {
         email: this.email,
         password: this.password,
       })
-      .then(response => console.log(response.data))
-      .catch(err => console.log(err.response))
+      .then(response => this.$router.push("/blog"))
+      .catch(err => (this.errors = err.response.data))
     }
   },
 };

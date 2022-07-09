@@ -35,18 +35,18 @@ exports.login = async (req, res) => {
     return res.status(400).json({message: "Veuillez remplir tous les champs !"})
   }
     const user = await User.findOne({where: {email: req.body.email}})
-    const token = jwt.sign({id: user.id}, process.env.KEY, {expiresIn: "24h"})
     
-    if(!user){
-      return res.status(400).json({message: "Cet email n'existe pas"})
+    if(!user || req.body.email !== user.email){
+      return res.status(400).json({message: "Cet utilisateur n'existe pas"})
     }
-
+    
     const decryptPassword = await bcrypt.compare(req.body.password, user.password)
-
+    
     if(!decryptPassword){
       return res.status(400).json({message: "mot de passe incorrecte"})
     }
-
+    
+    const token = jwt.sign({id: user.id}, process.env.KEY, {expiresIn: "24h"})
 
     res.cookie("jwt", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24})
     res.status(200).json({
