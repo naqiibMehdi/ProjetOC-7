@@ -1,10 +1,11 @@
 const Blog = require("../models/blogs")
 const User = require("../models/users")
 
+
+//create one blog
 exports.createBlog = async (req, res) => {
 
   try {
-
     const { description, imageUrl, userId } = req.body
     let blog
 
@@ -35,6 +36,8 @@ exports.createBlog = async (req, res) => {
 
 }
 
+
+//display all blogs
 exports.getAllBlogs = async (req, res) => {
   try{
     const allBlogs = await Blog.findAll({})

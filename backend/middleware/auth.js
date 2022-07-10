@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
 module.exports = (req, res, next) => {
-  const token = req.body.token || req.headers.cookie.split("=")[1]
+  const token = req.body.token || req.cookies.jwt
   if(!token){
     return res.status(401).json({message: "Vous devez générer un token !"})
   }
@@ -13,6 +13,7 @@ module.exports = (req, res, next) => {
     return res.status(403).json({message: "token incorecte, vous n'êtes pas autorisé"})
   }
   
+
   req.user = decodedToken.id
   next()
 }

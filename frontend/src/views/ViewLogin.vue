@@ -48,7 +48,7 @@ export default {
       axios.post("http://localhost:3000/api/auth/login", {
         email: this.email,
         password: this.password,
-      })
+      }, {withCredentials: true})
       .then(response => this.$router.push("/blog"))
       .catch(err => (this.errors = err.response.data))
     }
