@@ -11,6 +11,9 @@
       :id="card.id"
       :description="decodeURIComponent(card.description)"
       :imageUrl="card.imageUrl"
+      :name="card.user.name"
+      :firstname="card.user.firstname"
+      :createdAt="dateFormat(card.createdAt)"
     />
   </div>
 </template>
@@ -60,7 +63,7 @@ export default {
           this.dataForm(),
           {withCredentials: true, headers: {"Content-Type": "multipart/form-data"}}
         )
-        .then(() => this.$router.go("/blog"))
+        .then(() => document.location.reload())
         .catch((err) => {
           this.error = err.response.data.message
           alert(this.error)
@@ -69,6 +72,12 @@ export default {
 
     previewFile() {
       return this.imageUrl = this.$refs.myImage.files[0]
+    },
+
+    dateFormat(date){
+      const dateCreate = new Date(date)
+      const options = {year: 'numeric', month: 'numeric', day:'numeric'}
+      return dateCreate.toLocaleDateString('fr-FR', options)
     }
   },
 };

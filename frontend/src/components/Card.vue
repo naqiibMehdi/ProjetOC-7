@@ -1,28 +1,24 @@
 <template>
-  <div class="card">
-    <p>{{ description }}</p>
-    <img :src="imageUrl" alt="image d'un blog" v-if="imageUrl"/>
-  </div>
+   <article class="card">
+      <p>{{ name }} {{ firstname }}</p>
+      <p>Le {{ createdAt }}</p>
+      <a :href="`/blog/${id}`" class="card-link">
+        <p>{{ description }}</p>
+        <img :src="imageUrl" alt="image d'un blog" v-if="imageUrl"/>
+      </a>
+  </article> 
 </template>
 
 <script>
 export default {
   name: "Card",
-  props: ["id", "description", "imageUrl"]
+  props: ["id", "description", "imageUrl", "name", "firstname", "createdAt"]
 }
 </script>
   
 <style>
-.card{
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-  height: 250px;
-}
-
 .card img{
-  width: 100%;
-  height: 100%;
+  width: 150px;
+  height: 150px;
 }
-
 </style>
