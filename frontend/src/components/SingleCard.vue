@@ -1,17 +1,15 @@
 <template>
    <article class="card">
-      <h3>{{ name }} {{ firstname }}</h3>
+      <!-- <h3>{{ name }} {{ firstname }}</h3> -->
       <p>Le {{ createdAtHour }} à {{ createdAtTime }}</p>
-      <router-link :to="{name: 'singleBlog', params: {id} }" class="card-link">
         <p>{{ description }}</p>
         <img :src="imageUrl" alt="image d'un blog" v-if="imageUrl"/>
-      </router-link>
   </article> 
 </template>
 
 <script>
 export default {
-  name: "Card",
+  name: "SingleCard",
   props: ["id", "description", "imageUrl", "name", "firstname", "createdAtHour", "createdAtTime"]
 }
 </script>

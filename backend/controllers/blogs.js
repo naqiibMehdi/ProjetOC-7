@@ -44,11 +44,15 @@ exports.getAllBlogs = async (req, res) => {
       include: {model: User, attributes: ["name", "firstname"]}
     })
     
+    if(!allBlogs){
+      throw Error("aucun blogs disponible")
+    }
+    
     res.status(200).json(allBlogs)
   }
   
   catch(err){
-    res.status(400).json({message: "aucun blogs disponible"})
+    res.status(400).json(err.message)
   }
 }
 
@@ -57,7 +61,7 @@ exports.getOneBlog = async (req, res) => {
   try{
     const oneBlog = await Blog.findOne({where: {id: req.params.id}})
     if(!oneBlog){
-      return res.status(400).json({message: "article inexistant"})
+      throw Error("article inexistant")
     }
     res.status(200).json(oneBlog)
   }
@@ -109,7 +113,7 @@ exports.deleteOneBlog = async (req, res) => {
 
       })
     }else{
-      res.status(400).json({message: "ce blog n'existe plus !"})
+      throw Error("ce blog n'existe plus !")
     }
   }
   catch(err){

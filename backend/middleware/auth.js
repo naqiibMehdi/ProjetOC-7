@@ -13,7 +13,6 @@ module.exports = (req, res, next) => {
     return res.status(403).json({message: "token incorecte, vous n'êtes pas autorisé"})
   }
   
-
   req.user = decodedToken.id
   next()
 }
