@@ -11,4 +11,5 @@ route.get("/blogs/:id", auth, blogCtrl.getOneBlog)
 route.put("/blogs/:id", auth, multer, blogCtrl.updateOneBlog)
 route.delete("/blogs/:id", auth, multer, blogCtrl.deleteOneBlog)
 
+
 module.exports = route

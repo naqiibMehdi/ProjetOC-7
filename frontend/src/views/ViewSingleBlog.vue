@@ -2,25 +2,15 @@
     <div v-if="card.length === 0">
       <p>Article inexistant !</p>
     </div>
-      <div v-else>
-        <div v-if="!display">
-        <SingleCard
-          :description="card[0].description"
-          :imageUrl="card[0].imageUrl"
-          :createdAtHour="dateFormat(card[0].createdAt)"
-          :createdAtTime="timeFormat(card[0].createdAt)"
-        />
-        <Button color="blue" text="Modifier" @click="displayComponent"/>
-        <Button color="red" text="Supprimer" @click="deleteCard"/>
-      </div>
-      <div v-else>
-          <form method="POST" enctype="multipart/form-data" @submit.prevent="postCard">
-          <textarea name="description" id="description" cols="30" rows="10" v-model="description"></textarea>
-          <input type="file" name="image" id="image" ref="myImage" accept="image/jpeg, image/png" @change="previewFile"/>
-          <Button text="Annuler" color="grey" @click="displayComponent"/>
-          <Button text="Valider" color="green"/>
-        </form>
-      </div>
+    <div v-else>
+      <SingleCard
+        :description="card[0].description"
+        :imageUrl="card[0].imageUrl"
+        :createdAtHour="dateFormat(card[0].createdAt)"
+        :createdAtTime="timeFormat(card[0].createdAt)"
+      />
+      <Button color="blue" text="Modifier" @click="$router.push({name: 'updateBlog'})"/>
+      <Button color="red" text="Supprimer" @click="deleteCard"/>
     </div>
 </template>
 
@@ -36,8 +26,6 @@ export default {
     return {
       card: [],
       display: false,
-      description: "",
-      imageUrl: ""
     }
   },
 
@@ -46,6 +34,7 @@ export default {
   },
 
   methods: {
+
     getCard() {
       axios.get(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
         {
@@ -78,10 +67,6 @@ export default {
 
     timeFormat(time){
       return new Date(time).toLocaleTimeString('fr-FR', {hour: 'numeric', minute: 'numeric'})
-    },
-
-    displayComponent(){
-      return this.display = !this.display
     }
   }
 }

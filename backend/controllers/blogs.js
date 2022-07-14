@@ -10,7 +10,7 @@ exports.createBlog = async (req, res) => {
     let blog
 
     if (!req.body.description) {
-      return res.status(400).json({ message: "vous devez au moins saisir une description !" })
+      throw Error("vous devez au moins saisir une description !")
     }
 
       if(req.file){
@@ -74,7 +74,7 @@ exports.updateOneBlog = async (req, res) => {
   try{
       if(!req.file){
 
-        await Blog.update({...req.body}, {where: {id: req.params.id}})
+        await Blog.update({description: req.body.description}, {where: {id: req.params.id}})
         res.status(200).json({message: "Description du blog mis à jour !"})
 
       }else{
