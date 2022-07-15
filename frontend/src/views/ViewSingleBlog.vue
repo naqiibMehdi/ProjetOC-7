@@ -9,6 +9,15 @@
         :createdAtHour="dateFormat(card[0].createdAt)"
         :createdAtTime="timeFormat(card[0].createdAt)"
       />
+      <Comment
+        v-for="comment in listComments" 
+        :key="comment.id"
+        :id="comment.id"
+        :name="comment.user.name"
+        :firstname="comment.user.firstname"
+        :description="comment.description"
+      />
+      <textarea name="description" id="description" cols="30" rows="1" v-model="comment" @keyup.enter="createComment"></textarea>
       <Button color="blue" text="Modifier" @click="$router.push({name: 'updateBlog'})"/>
       <Button color="red" text="Supprimer" @click="deleteCard"/>
     </div>
@@ -16,25 +25,29 @@
 
 <script>
 import SingleCard from "@/components/SingleCard.vue"
+import Comment from "@/components/Comment.vue"
 import Button from "@/components/Button.vue"
 import axios from "axios"
 
 export default {
   name: "SingleBlog",
-  components: {SingleCard, Button},
+  components: {SingleCard, Button, Comment},
   data (){
     return {
       card: [],
+      listComments: [],
       display: false,
+      comment: ""
     }
   },
 
   async mounted(){
-    this.getCard()
+    (this.getCard()); 
+    (this.getComment())
   },
 
   methods: {
-
+    //section about card data
     getCard() {
       axios.get(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
         {
@@ -57,6 +70,29 @@ export default {
           this.$router.push("/blog")
         })
         .catch((err) => console.log(err));
+    },
+
+    //section about comments data
+    getComment() {
+      axios.get(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, 
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then((res) => {
+          for(let comment of res.data){
+            this.listComments.push(comment)
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+
+    createComment() {
+      axios.post(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, {
+        description: this.comment,
+      }, {withCredentials: true})
+      .then((res) => this.$router.go({name: "singleBlog"}))
+      .catch(err => (this.errors = err.response.data))
     },
 
     dateFormat(date){

@@ -9,7 +9,7 @@ route.post("/blogs", auth, multer, blogCtrl.createBlog)
 route.get("/blogs", auth, blogCtrl.getAllBlogs)
 route.get("/blogs/:id", auth, blogCtrl.getOneBlog)
 route.put("/blogs/:id", auth, multer, blogCtrl.updateOneBlog)
-route.delete("/blogs/:id", auth, multer, blogCtrl.deleteOneBlog)
+route.delete("/blogs/:id", auth, blogCtrl.deleteOneBlog)
 
 
 module.exports = route
