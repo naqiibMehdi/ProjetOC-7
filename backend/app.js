@@ -3,6 +3,7 @@ const path = require("path")
 const authRoute = require("./routes/users")
 const blogsRoute = require("./routes/blogs")
 const commentRoute = require("./routes/comments")
+const likeRoute = require("./routes/likes")
 const cookieParser = require("cookie-parser")
 
 
@@ -25,6 +26,6 @@ app.use("/images", express.static(path.join(__dirname, "images")))
 
 
 app.use("/api/auth", authRoute)
-app.use("/api", blogsRoute, commentRoute)
+app.use("/api", blogsRoute, commentRoute, likeRoute)
 
 module.exports = app

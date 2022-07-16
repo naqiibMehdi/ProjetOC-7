@@ -45,6 +45,36 @@ exports.getComment = async (req, res) => {
   }
 }
 
+exports.getOneComment = async (req, res) => {
+  try{
+    const comment = await Comment.findOne({where: {id: req.params.id}})
+
+    if(!comment){
+      throw Error("Ce commentaire n'existe pas !")
+    }
+
+    res.status(200).json(comment)
+  }
+  catch(err){
+    res.status(400).json(err.message)
+  }
+}
+
+exports.updateComment = async (req, res) => {
+  try{
+    if(!req.body.description){
+      throw Error("Vous devez saisir une description")
+    }
+
+    await Comment.update({description: req.body.description}, {where: {id: req.params.id}})
+
+    res.status(200).json({message: "Commentaire mis à jour !"})
+  }
+  catch(err){
+    res.status(400).json(err.message)
+  }
+}
+
 exports.deleteComment = async (req, res) => {
   try{
     const comment = await Comment.destroy({where: {id: req.params.id}})

@@ -17,9 +17,11 @@
         :firstname="comment.user.firstname"
         :description="comment.description"
       />
-      <textarea name="description" id="description" cols="30" rows="1" v-model="comment" @keyup.enter="createComment"></textarea>
-      <Button color="blue" text="Modifier" @click="$router.push({name: 'updateBlog'})"/>
-      <Button color="red" text="Supprimer" @click="deleteCard"/>
+      <div>
+        <textarea name="description" id="description" cols="30" rows="1" v-model="comment" @keyup.enter="createComment"></textarea>
+      </div>
+      <Button color="blue" text="Modifier l'article" @click="$router.push({name: 'updateBlog'})"/>
+      <Button color="red" text="Supprimer l'article" @click="deleteCard"/>
     </div>
 </template>
 
