@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
   const decodedToken = jwt.verify(token, process.env.KEY)
 
   if(req.body.userId && req.body.userId !== decodedToken.id){
-    return res.status(403).json({message: "token incorecte, vous n'êtes pas autorisé"})
+    return res.status(403).json({message: "token incorrecte, vous n'êtes pas autorisé"})
   }
   
   req.user = decodedToken.id

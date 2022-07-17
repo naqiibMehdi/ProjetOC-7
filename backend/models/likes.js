@@ -17,10 +17,8 @@ const Like = sequelize.define("likes", {
   timestamps: false
 })
 
-Blog.hasMany(Like, {foreignKey: "blogId"})
-User.hasMany(Like, {foreignKey: "userId"})
+Blog.belongsToMany(User, {through: Like, foreignKey: "blogId"})
+User.belongsToMany(Blog, {through: Like, foreignKey: "userId"})
 
-Like.belongsTo(Blog)
-Like.belongsTo(User)
 
 module.exports = Like

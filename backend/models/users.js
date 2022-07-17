@@ -43,6 +43,11 @@ const User = sequelize.define("users", {
       }
     }
   },
+  imageProfile: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+
   isadmin: {
     type: DataTypes.BOOLEAN,
     allowNull: false

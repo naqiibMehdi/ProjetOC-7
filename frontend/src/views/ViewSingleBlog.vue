@@ -18,7 +18,7 @@
         :description="comment.description"
       />
       <div>
-        <textarea name="description" id="description" cols="30" rows="1" v-model="comment" @keyup.enter="createComment"></textarea>
+        <textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.enter="createComment"></textarea>
       </div>
       <Button color="blue" text="Modifier l'article" @click="$router.push({name: 'updateBlog'})"/>
       <Button color="red" text="Supprimer l'article" @click="deleteCard"/>

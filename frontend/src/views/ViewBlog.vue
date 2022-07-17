@@ -13,6 +13,7 @@
       :imageUrl="card.imageUrl"
       :name="card.user.name"
       :firstname="card.user.firstname"
+      :imageProfile="card.user.imageProfile"
       :createdAtHour="dateFormat(card.createdAt)"
       :createdAtTime="timeFormat(card.createdAt)"
     />

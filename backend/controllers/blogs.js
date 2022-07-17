@@ -41,7 +41,7 @@ exports.createBlog = async (req, res) => {
 exports.getAllBlogs = async (req, res) => {
   try{
     const allBlogs = await Blog.findAll({
-      include: {model: User, attributes: ["name", "firstname"]}
+      include: {model: User, attributes: ["name", "firstname", "imageProfile"]}
     })
     
     if(!allBlogs){

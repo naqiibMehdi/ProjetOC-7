@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
 exports.signup = (req, res) => {
-  const {name, firstname, email, password, isadmin} = req.body
+  const {name, firstname, email, password, isadmin, imageProfile} = req.body
   let listErrors = {}
 
     bcrypt.hash(password, 10)
@@ -14,6 +14,7 @@ exports.signup = (req, res) => {
         firstname,
         email,
         password: hashPassword,
+        imageProfile: `${req.protocol}://${req.get("host")}/images/profile.png`,
         isadmin
       })
       user.save()
