@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     checkPassword() {
-      if(!/^[\w\d-_*$/\\*]{8,}$/.test(this.password)){
+      if(this.password && !/^[\w\d-_*$/\\*]{8,}$/.test(this.password)){
         return this.errors.password = "Votre mot de passe doit comporter au moins 8 caractères"
       }else{
         return ""
@@ -70,7 +70,6 @@ export default {
         firstname: this.firstname,
         email: this.email,
         password: this.password,
-        isadmin: 0
       })
       .then(response => this.$router.push("/login"))
       .catch(err => (this.errors = err.response.data))

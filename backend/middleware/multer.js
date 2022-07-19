@@ -10,8 +10,11 @@ const storage = multer.diskStorage({
     const nameFile = file.originalname.split(".")[0].split(" ").join("-")
     const extension = file.mimetype.split("/")[1]
     cb(null, nameFile + "-" + uuid + "." + extension)
-  },
+  }
+})
 
+module.exports = multer({
+  storage,
   fileFilter: function (req, file, cb) {
     const whitelist = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif']
 
@@ -21,6 +24,4 @@ const storage = multer.diskStorage({
 
     cb(null, true)
   }
-})
-
-module.exports = multer({storage}).single("imageUrl")
+}).single("imageUrl")

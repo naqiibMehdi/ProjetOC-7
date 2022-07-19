@@ -1,4 +1,5 @@
 <template>
+<MainHeader />
   <div class="blog">
     <form method="POST" enctype="multipart/form-data" @submit.prevent="postCard">
       <textarea name="description" id="description" cols="30" rows="10" v-model="description"></textarea>
@@ -22,11 +23,13 @@
 
 <script>
 import Card from "@/components/Card.vue";
+import MainHeader from "@/components/MainHeader.vue";
 import Button from "@/components/Button.vue";
 import axios from "axios";
+
 export default {
   name: "Blog",
-  components: { Card, Button },
+  components: { Card, Button, MainHeader },
   data() {
     return {
       listCards: [],
@@ -66,7 +69,10 @@ export default {
           this.dataForm(),
           {withCredentials: true, headers: {"Content-Type": "multipart/form-data"}}
         )
-        .then(() => document.location.reload())
+        .then(() => {
+          this.listCards = []
+          return this.getCards()
+        })
         .catch((err) => {
           this.error = err.response.data.message
           alert(this.error)

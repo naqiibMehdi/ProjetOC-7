@@ -8,7 +8,7 @@
         <img :src="imageUrl" alt="image d'un blog" v-if="imageUrl"/>
       </router-link>
       <div class="">
-        <p @click="addLikes" :style="totalLikes > 0 ? {color: 'red'} : ''"><span>{{ totalLikes }}</span> J'aime</p>
+        <p @click="addLikes"><span>{{ totalLikes }}</span> J'aime</p>
         <p><span>{{ totalComments }}</span> {{ totalComments > 1 ? 'Commentaires' : 'Commentaire' }}</p>
       </div>
   </article> 

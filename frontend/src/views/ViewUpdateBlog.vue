@@ -1,4 +1,5 @@
 <template>
+  <MainHeader />
   <form
     method="POST"
     enctype="multipart/form-data"
@@ -26,11 +27,12 @@
 
 <script>
 import Button from "@/components/Button.vue";
+import MainHeader from "@/components/MainHeader.vue";
 import axios from "axios";
 
 export default {
   name: "UpdateBlog",
-  components: { Button },
+  components: { Button, MainHeader },
   data() {
     return {
       description: "",

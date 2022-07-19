@@ -17,7 +17,7 @@ exports.signup = (req, res) => {
         email,
         password: hashPassword,
         imageProfile: `${req.protocol}://${req.get("host")}/images/profile/profile.png`,
-        isadmin
+        isadmin: false
       })
       user.save()
         .then(() => res.status(201).json({ message: "Utilsateur créé !" }))
@@ -73,12 +73,16 @@ exports.updateImageUser = async (req, res) => {
           imageProfile: `${req.protocol}://${req.get("host")}/images/profile/${req.file.filename}`
         }, {where: {id: req.user}})
 
+        res.status(200).json({message: "image du profil mis à jour"})
+
       }else{
 
         fs.unlink(`images/profile/${file}`, async () => {
           await User.update({
             imageProfile: `${req.protocol}://${req.get("host")}/images/profile/${req.file.filename}`
           }, {where: {id: req.user}})
+
+          res.status(200).json({message: "image du profil mis à jour"})
         })
       }
     }else{
@@ -92,7 +96,7 @@ exports.updateImageUser = async (req, res) => {
 
 exports.getOneUser = async (req, res) => {
   try{
-    const user = await User.findOne({where: {id: req.user}})
+    const user = await User.findOne({where: {id: req.user}, attributes: ["name", "firstname", "imageProfile", "email", "createdat"]})
 
     if(!user){
       throw Error("Utilisateur introuvable !")
@@ -111,6 +115,7 @@ exports.deleteOneUser = async (req, res) => {
     if(!user){
       throw Error("Utilisateur introuvable !")
     }
+    res.cookie("jwt", "", {maxAge: 1})
     res.status(200).json({message: "Votre compte a bien été supprimé !"})
   }
   catch(err){

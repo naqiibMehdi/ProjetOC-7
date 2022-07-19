@@ -1,4 +1,5 @@
 <template>
+  <MainHeader />
     <div v-if="card.length === 0">
       <p>Article inexistant !</p>
     </div>
@@ -27,13 +28,14 @@
 
 <script>
 import SingleCard from "@/components/SingleCard.vue"
+import MainHeader from "@/components/MainHeader.vue"
 import Comment from "@/components/Comment.vue"
 import Button from "@/components/Button.vue"
 import axios from "axios"
 
 export default {
   name: "SingleBlog",
-  components: {SingleCard, Button, Comment},
+  components: {SingleCard, Button, Comment, MainHeader},
   data (){
     return {
       card: [],

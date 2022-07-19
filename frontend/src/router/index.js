@@ -4,6 +4,7 @@ import Login from "@/views/ViewLogin.vue"
 import Blog from "@/views/ViewBlog.vue"
 import SingleBlog from "@/views/ViewSingleBlog.vue"
 import UpdateBlog from "@/views/ViewUpdateBlog.vue"
+import Profile from "@/views/ViewProfile.vue"
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: "/blog/:id/update",
     name: "updateBlog",
     component: UpdateBlog
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile
   }
 ]
 
