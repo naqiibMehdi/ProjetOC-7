@@ -7,7 +7,7 @@ const User = sequelize.define("users", {
     allowNull: false,
     validate: {
       is: {
-        args: /^[a-zA-Z]{3,}$/,
+        args: /^[a-zA-Z\- ]{3,}$/,
         msg: "Donnée incorrecte, veuillez saisir un nom valide"
       }
     }
@@ -17,7 +17,7 @@ const User = sequelize.define("users", {
     allowNull: false,
     validate: {
       is: {
-        args: /^[a-zA-Z]{3,}$/,
+        args: /^[a-zA-Z\- ]{3,}$/,
         msg: "Donnée incorrecte, veuillez saisir un prénom valide"
       }
     }

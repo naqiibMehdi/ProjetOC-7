@@ -1,10 +1,12 @@
 const User = require("../models/Users")
+const { Op } = require("sequelize")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const fs = require("fs")
 require("dotenv").config()
 
 exports.signup = (req, res) => {
-  const {name, firstname, email, password, isadmin, imageProfile} = req.body
+  const {name, firstname, email, password, isadmin} = req.body
   let listErrors = {}
 
     bcrypt.hash(password, 10)
@@ -14,7 +16,7 @@ exports.signup = (req, res) => {
         firstname,
         email,
         password: hashPassword,
-        imageProfile: `${req.protocol}://${req.get("host")}/images/profile.png`,
+        imageProfile: `${req.protocol}://${req.get("host")}/images/profile/profile.png`,
         isadmin
       })
       user.save()
@@ -55,5 +57,84 @@ exports.login = async (req, res) => {
       isadmin: user.isadmin
 
     })
+
+}
+
+//section of function for the user
+exports.updateImageUser = async (req, res) => {
+  try{
+    if(req.file){
+      const user = await User.findOne({where: {id: req.user}})
+      const file = user.imageProfile.split("/images/profile/")[1]
+
+      if(file === "profile.png"){
+
+        await User.update({
+          imageProfile: `${req.protocol}://${req.get("host")}/images/profile/${req.file.filename}`
+        }, {where: {id: req.user}})
+
+      }else{
+
+        fs.unlink(`images/profile/${file}`, async () => {
+          await User.update({
+            imageProfile: `${req.protocol}://${req.get("host")}/images/profile/${req.file.filename}`
+          }, {where: {id: req.user}})
+        })
+      }
+    }else{
+      throw Error("Aucune image à changer !")
+    }
+  }
+  catch(err){
+    res.status(400).json(err.message)
+  }
+}
+
+exports.getOneUser = async (req, res) => {
+  try{
+    const user = await User.findOne({where: {id: req.user}})
+
+    if(!user){
+      throw Error("Utilisateur introuvable !")
+    }
+
+    res.status(200).json(user)
+  }
+  catch(err){
+    res.status(400).json(err.message)
+  }
+}
+
+exports.deleteOneUser = async (req, res) => {
+  try{
+    const user = await User.destroy({where: {id: req.user}})
+    if(!user){
+      throw Error("Utilisateur introuvable !")
+    }
+    res.status(200).json({message: "Votre compte a bien été supprimé !"})
+  }
+  catch(err){
+    res.status(400).json(err.message)
+  }
+}
+
+//section of function for the admin
+
+exports.getAllUsers = async (req, res) => {
+  try{
+    const users  = await User.findAll({where: {
+      email: {[Op.ne]: "admin@groupomania.com"}
+      }
+    })
+
+    if(!users){
+      throw Error("Aucun utilisateur existant !")
+    }
+
+    res.status(200).json(users)
+  }
+  catch(err){
+    res.status(400).json(err.message)
+  }
 
 }
