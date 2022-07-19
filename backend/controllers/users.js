@@ -120,7 +120,7 @@ exports.deleteOneUser = async (req, res) => {
 
 //section of function for the admin
 
-exports.getAllUsers = async (req, res) => {
+exports.getAllUsersByAdmin = async (req, res) => {
   try{
     const users  = await User.findAll({where: {
       email: {[Op.ne]: "admin@groupomania.com"}
@@ -137,4 +137,33 @@ exports.getAllUsers = async (req, res) => {
     res.status(400).json(err.message)
   }
 
+}
+
+exports.deleteUserByAdmin = async (req, res) => {
+  await User.destroy({where: {id: req.params.userId}})
+  res.status(200).json({message: "utilisateur supprimé avec succès !"})
+}
+
+exports.updateStatusAdmin = async (req, res) => {
+  try{
+    const user = await User.findOne({where: {id: req.params.userId}})
+
+    if(!user){
+      throw Error("Utilisateur non trouvé")
+    }
+
+    if(!user.isadmin){
+
+      await User.update({isadmin: true}, {where: {id: user.id}})
+      res.status(200).json({message: "Status utilisateur mis à jour !"})
+
+    }else{
+
+      await User.update({isadmin: false}, {where: {id: user.id}})
+      res.status(200).json({message: "Status utilisateur mis à jour !"})
+    }
+  }
+  catch(err){
+    res.status(400).json(err.message)
+  }
 }

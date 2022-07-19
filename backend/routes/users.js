@@ -14,6 +14,8 @@ route.get("/user/profile", auth, userCtrl.getOneUser)
 route.delete("/user/profile", auth, userCtrl.deleteOneUser)
 
 //section of admin path
-route.get("/admin", userCtrl.getAllUsers)
+route.get("/admin/user", auth, userCtrl.getAllUsersByAdmin)
+route.put("/admin/user/:userId", auth, userCtrl.updateStatusAdmin)
+route.delete("/admin/user/:userId", auth, userCtrl.deleteUserByAdmin)
 
 module.exports = route
