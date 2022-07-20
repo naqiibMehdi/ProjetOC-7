@@ -1,13 +1,31 @@
 const User = require("../models/Users")
+const Blog = require("../models/blogs")
 const { Op } = require("sequelize")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const fs = require("fs")
+const passwordValidator = require("password-validator")
 require("dotenv").config()
 
+
+
 exports.signup = (req, res) => {
-  const {name, firstname, email, password, isadmin} = req.body
+  const schema = new passwordValidator()
+  schema
+  .is().min(8)
+  .is().max(100)
+  .has().uppercase(1)
+  .has().lowercase(1)
+  .has().digits(1)
+  .has().not().spaces()
+
+  const {name, firstname, email, password} = req.body
   let listErrors = {}
+
+    if(!schema.validate(password)){
+        listErrors["password"] = "Critère du Mot de passe: 1 minuscule, 1 majuscule, 1 chiffre, 8 caractères minimum"
+    }
+     
 
     bcrypt.hash(password, 10)
     .then((hashPassword) => {
@@ -58,6 +76,11 @@ exports.login = async (req, res) => {
 
     })
 
+}
+
+exports.logout = (req, res) => {
+  res.cookie("jwt", "", {maxAge: 1})
+  res.redirect("/")
 }
 
 //section of function for the user
@@ -111,6 +134,21 @@ exports.getOneUser = async (req, res) => {
 
 exports.deleteOneUser = async (req, res) => {
   try{
+    const findUser = await User.findOne({where: {id: req.user}})
+    const findBlog = await Blog.findAll({where: {userId: req.user}, attributes: ["imageUrl"]})
+
+    if(findUser){
+      const imageProfile = findUser.imageProfile.split("/images/profile/")[1]
+      fs.unlinkSync(`images/profile/${imageProfile}`)
+    }
+
+    if(findBlog && findBlog >= 1){
+      findBlog.forEach(image => {
+        const imageBlog = image.split("/images/")[1]
+        fs.unlinkSync(`images/${imageBlog}`)
+      })
+    }
+
     const user = await User.destroy({where: {id: req.user}})
     if(!user){
       throw Error("Utilisateur introuvable !")
