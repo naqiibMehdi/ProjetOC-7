@@ -31,7 +31,7 @@
           v-model="password"
           @input="checkPassword"
         />
-        <span v-show="errors.password">{{ checkPassword() }}</span>
+        <span v-show="errors.password">{{ errors.password }}</span>
 
         <button type="submit">Créer un compte</button>
       </div>
@@ -52,17 +52,10 @@ export default {
       firstname: "",
       email: "",
       password: "",
-      errors: {password: null}
+      errors: {}
     };
   },
   methods: {
-    checkPassword() {
-      if(this.password && !/^[\w\d-_*$/\\*]{8,}$/.test(this.password)){
-        return this.errors.password = "Votre mot de passe doit comporter au moins 8 caractères"
-      }else{
-        return ""
-      }
-    },
 
     fetchSignup() {
       axios.post("http://localhost:3000/api/auth/signup", {

@@ -17,12 +17,13 @@
         :name="comment.user.name"
         :firstname="comment.user.firstname"
         :description="comment.description"
+        :userid="comment.userId"
       />
-      <div>
+      <form method="POST">
         <textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.enter="createComment"></textarea>
-      </div>
-      <Button color="blue" text="Modifier l'article" @click="$router.push({name: 'updateBlog'})"/>
-      <Button color="red" text="Supprimer l'article" @click="deleteCard"/>
+      </form>
+      <Button color="blue" text="Modifier l'article" v-if="isOwner === userIdLocal()" @click="$router.push({name: 'updateBlog'})"/>
+      <Button color="red" text="Supprimer l 'article" v-if="isOwner === userIdLocal()" @click="deleteCard"/>
     </div>
 </template>
 
@@ -40,7 +41,7 @@ export default {
     return {
       card: [],
       listComments: [],
-      display: false,
+      isOwner: null,
       comment: ""
     }
   },
@@ -51,6 +52,9 @@ export default {
   },
 
   methods: {
+    userIdLocal(){
+      return parseInt(document.cookie.split(";")[1].split("=")[1])
+    },
     //section about card data
     getCard() {
       axios.get(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
@@ -60,6 +64,7 @@ export default {
         })
         .then((res) => {
           this.card.push(res.data)
+          this.isOwner = res.data.userId
         })
         .catch((err) => console.log(err));
     },
@@ -95,7 +100,11 @@ export default {
       axios.post(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, {
         description: this.comment,
       }, {withCredentials: true})
-      .then((res) => this.$router.go({name: "singleBlog"}))
+      .then((res) => {
+        this.listComments = []
+        this.comment = ""
+        this.getComment()
+      })
       .catch(err => (this.errors = err.response.data))
     },
 

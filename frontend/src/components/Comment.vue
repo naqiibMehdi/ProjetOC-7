@@ -1,9 +1,9 @@
 <template>
-  <div :data-id="id" v-if="show">
+  <div :data-id="id" v-if="show" :data-userid="userid">
     <p>{{ name }}_{{ firstname }}</p>
     <p>{{ description }}</p>
-    <Button text="modifier" color="blue" @click="updateComment"/>
-    <Button text="supprimer" color="red" @click="deleteComment"/>
+    <Button text="modifier" color="blue" v-if="userid === userIdLocal()" @click="updateComment"/>
+    <Button text="supprimer" color="red" v-if="userid === userIdLocal()" @click="deleteComment"/>
   </div>
   <div :data-id="id" v-else>
     <textarea name="description" id="description" cols="30" rows="1" v-model="comment" @keyup.enter="validateComment"></textarea>
@@ -16,7 +16,7 @@ import axios from "axios"
 
 export default {
   name: "Comment",
-  props: ["name", "firstname", "description", "id"],
+  props: ["name", "firstname", "description", "id", "userid"],
   components: { Button },
   data(){
     return {
@@ -24,7 +24,13 @@ export default {
       comment: ""
     }
   },
+ 
   methods: {
+
+    userIdLocal(){
+      return parseInt(document.cookie.split(";")[1].split("=")[1])
+    },
+
     deleteComment(e){
       const idComment = e.target.parentElement.dataset.id
 

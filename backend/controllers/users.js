@@ -23,7 +23,7 @@ exports.signup = (req, res) => {
   let listErrors = {}
 
     if(!schema.validate(password)){
-        listErrors["password"] = "Critère du Mot de passe: 1 minuscule, 1 majuscule, 1 chiffre, 8 caractères minimum"
+        return res.status(400).json({password: "Critère du Mot de passe: 1 minuscule, 1 majuscule, 1 chiffre, 8 caractères minimum"})
     }
      
 
@@ -70,17 +70,20 @@ exports.login = async (req, res) => {
     const token = jwt.sign({id: user.id}, process.env.KEY, {expiresIn: "24h"})
 
     res.cookie("jwt", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24, SameSite: "None"})
+    res.cookie("admin", user.isadmin, {maxAge: 1000 * 60 * 60 * 24, SameSite: "None"})
+    res.cookie("user", user.id, {maxAge: 1000 * 60 * 60 * 24, SameSite: "None"})
+
     res.status(200).json({
       idUser: user.id,
       isadmin: user.isadmin
-
     })
-
 }
 
 exports.logout = (req, res) => {
   res.cookie("jwt", "", {maxAge: 1})
-  res.redirect("/")
+  res.cookie("admin", "", {maxAge: 1})
+  res.cookie("user", '', {maxAge: 1})
+  res.status(200).json("Vous êtes bien déconnecté")
 }
 
 //section of function for the user
@@ -134,31 +137,39 @@ exports.getOneUser = async (req, res) => {
 
 exports.deleteOneUser = async (req, res) => {
   try{
-    const findUser = await User.findOne({where: {id: req.user}})
-    const findBlog = await Blog.findAll({where: {userId: req.user}, attributes: ["imageUrl"]})
+    const oneUser = await User.findOne({where: {id: req.user}, attributes: ["imageProfile"]})
+    const allBlogs = await Blog.findAll({where: {userId: req.user}, attributes: ["imageUrl"]})
 
-    if(findUser){
-      const imageProfile = findUser.imageProfile.split("/images/profile/")[1]
-      fs.unlinkSync(`images/profile/${imageProfile}`)
+
+    if(oneUser){
+      const imageProfile = oneUser.imageProfile.split("/images/profile/")[1]
+      if(imageProfile !== "profile.png"){
+        fs.unlinkSync(`images/profile/${imageProfile}`)
+      }
     }
 
-    if(findBlog && findBlog >= 1){
-      findBlog.forEach(image => {
-        const imageBlog = image.split("/images/")[1]
+    if(allBlogs && allBlogs.length >= 1){
+      allBlogs.forEach(image => {
+        const imageBlog = image.imageUrl.split("/images/")[1]
         fs.unlinkSync(`images/${imageBlog}`)
       })
     }
 
     const user = await User.destroy({where: {id: req.user}})
+
     if(!user){
       throw Error("Utilisateur introuvable !")
     }
+
     res.cookie("jwt", "", {maxAge: 1})
+    res.cookie("admin", "", {maxAge: 1})
+    res.cookie("user", '' , {maxAge: 1})
     res.status(200).json({message: "Votre compte a bien été supprimé !"})
-  }
-  catch(err){
+   }
+
+    catch(err){
     res.status(400).json(err.message)
-  }
+   }
 }
 
 //section of function for the admin
@@ -184,6 +195,9 @@ exports.getAllUsersByAdmin = async (req, res) => {
 
 exports.deleteUserByAdmin = async (req, res) => {
   await User.destroy({where: {id: req.params.userId}})
+
+  res.cookie("jwt", "", {maxAge: 1})
+  res.cookie("admin", "", {maxAge: 1})
   res.status(200).json({message: "utilisateur supprimé avec succès !"})
 }
 

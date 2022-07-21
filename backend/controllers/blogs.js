@@ -59,7 +59,9 @@ exports.getAllBlogs = async (req, res) => {
 //get one blog only
 exports.getOneBlog = async (req, res) => {
   try{
-    const oneBlog = await Blog.findOne({where: {id: req.params.id}})
+    const oneBlog = await Blog.findOne({where: {id: req.params.id}, 
+      include: {model: User, attributes: ["name", "firstname", "imageProfile"]}
+    })
     if(!oneBlog){
       throw Error("article inexistant")
     }

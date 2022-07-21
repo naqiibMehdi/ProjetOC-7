@@ -12,7 +12,7 @@ route.post("/logout", userCtrl.logout)
 //section of user path
 route.put("/user/profile/image", auth, multerProfile, userCtrl.updateImageUser)
 route.get("/user/profile", auth, userCtrl.getOneUser)
-route.delete("/user/profile", userCtrl.deleteOneUser)
+route.delete("/user/profile", auth, userCtrl.deleteOneUser)
 
 //section of admin path
 route.get("/admin/user", auth, userCtrl.getAllUsersByAdmin)

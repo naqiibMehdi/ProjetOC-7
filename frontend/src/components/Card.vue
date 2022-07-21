@@ -1,16 +1,20 @@
 <template>
    <article class="card" :data-id="id">
+
       <img :src="imageProfile" alt="" class="card-image-profile">
       <h3>{{ name }} {{ firstname }}</h3>
       <p>Le {{ createdAtHour }} à {{ createdAtTime }}</p>
+
       <router-link :to="{name: 'singleBlog', params: {id} }" class="card-link">
         <p>{{ description }}</p>
         <img :src="imageUrl" alt="image d'un blog" v-if="imageUrl"/>
       </router-link>
+
       <div class="">
         <p @click="addLikes"><span>{{ totalLikes }}</span> J'aime</p>
         <p><span>{{ totalComments }}</span> {{ totalComments > 1 ? 'Commentaires' : 'Commentaire' }}</p>
       </div>
+      
   </article> 
 </template>
 

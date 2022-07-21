@@ -5,7 +5,7 @@
       <ul>
         <li><router-link to="/blog">Accueil</router-link></li>
         <li><router-link to="/profile">Profile</router-link></li>
-        <li>Déconnexion</li>
+        <li><router-link to="/logout">Déconnexion</router-link></li>
       </ul>
     </nav>
   </header>

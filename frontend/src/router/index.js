@@ -5,6 +5,7 @@ import Blog from "@/views/ViewBlog.vue"
 import SingleBlog from "@/views/ViewSingleBlog.vue"
 import UpdateBlog from "@/views/ViewUpdateBlog.vue"
 import Profile from "@/views/ViewProfile.vue"
+import Logout from "@/views/ViewLogout.vue"
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: Profile
+  },
+  {
+    path: "/logout",
+    name: "logout",
+    component: Logout
   }
 ]
 

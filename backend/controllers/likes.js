@@ -42,9 +42,6 @@ exports.createLike = async (req, res) => {
 exports.getAllLike = async (req, res) => {
     try{
       const likes = await Like.count({where: {blogId: req.params.id}})
-      if(!likes){
-        throw Error("Aucun likes trouvés !")
-      }
       res.status(200).json(likes)
 
     }
