@@ -22,8 +22,8 @@
       <form method="POST">
         <textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.enter="createComment"></textarea>
       </form>
-      <Button color="blue" text="Modifier l'article" v-if="isOwner === userIdLocal()" @click="$router.push({name: 'updateBlog'})"/>
-      <Button color="red" text="Supprimer l 'article" v-if="isOwner === userIdLocal()" @click="deleteCard"/>
+      <Button color="blue" text="Modifier l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="$router.push({name: 'updateBlog'})"/>
+      <Button color="red" text="Supprimer l 'article" v-if="isOwner === userIdLocal() || isAdmin" @click="deleteCard"/>
     </div>
 </template>
 
@@ -42,18 +42,33 @@ export default {
       card: [],
       listComments: [],
       isOwner: null,
+      isAdmin: null,
       comment: ""
     }
   },
 
   async mounted(){
     (this.getCard()); 
-    (this.getComment())
+    (this.getComment());
+    (this.getUserData())
   },
 
   methods: {
     userIdLocal(){
       return parseInt(document.cookie.split(";")[1].split("=")[1])
+    },
+
+    //get the status admin 
+    getUserData() {
+      axios.get(`http://localhost:3000/api/auth/user/profile`, 
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then((res) => {
+          this.isAdmin = res.data.isadmin
+        })
+        .catch((err) => console.log(err));
     },
     //section about card data
     getCard() {
@@ -96,16 +111,19 @@ export default {
         .catch((err) => console.log(err));
     },
 
-    createComment() {
-      axios.post(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, {
-        description: this.comment,
-      }, {withCredentials: true})
-      .then((res) => {
-        this.listComments = []
-        this.comment = ""
-        this.getComment()
-      })
-      .catch(err => (this.errors = err.response.data))
+    createComment(e) {
+      console.log(e);
+      if(e.key === "Enter"){
+        axios.post(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, {
+          description: this.comment,
+        }, {withCredentials: true})
+        .then((res) => {
+          this.listComments = []
+          this.comment = ""
+          this.getComment()
+        })
+        .catch(err => (this.errors = err.response.data))
+      }
     },
 
     dateFormat(date){

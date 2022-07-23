@@ -122,7 +122,7 @@ exports.updateImageUser = async (req, res) => {
 
 exports.getOneUser = async (req, res) => {
   try{
-    const user = await User.findOne({where: {id: req.user}, attributes: ["name", "firstname", "imageProfile", "email", "createdat"]})
+    const user = await User.findOne({where: {id: req.user}, attributes: ["name", "firstname", "isadmin", "imageProfile", "email", "createdat"]})
 
     if(!user){
       throw Error("Utilisateur introuvable !")
@@ -178,7 +178,8 @@ exports.getAllUsersByAdmin = async (req, res) => {
   try{
     const users  = await User.findAll({where: {
       email: {[Op.ne]: "admin@groupomania.com"}
-      }
+      },
+      attributes: ["id", "name", "firstname", "isadmin", "email", "imageProfile"]
     })
 
     if(!users){

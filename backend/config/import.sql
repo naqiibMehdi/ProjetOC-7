@@ -28,9 +28,11 @@ CREATE TABLE IF NOT EXISTS `blogs` (
   PRIMARY KEY (`id`),
   KEY `FK_userId` (`userId`),
   CONSTRAINT `FK_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- Listage des données de la table groupomania.blogs : ~0 rows (environ)
+/*!40000 ALTER TABLE `blogs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `blogs` ENABLE KEYS */;
 
 -- Listage de la structure de la table groupomania. comments
 CREATE TABLE IF NOT EXISTS `comments` (
@@ -45,7 +47,9 @@ CREATE TABLE IF NOT EXISTS `comments` (
   CONSTRAINT `fk_blogId` FOREIGN KEY (`blogId`) REFERENCES `blogs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- Listage des données de la table groupomania.comments : ~0 rows (environ)
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 
 -- Listage de la structure de la table groupomania. likes
 CREATE TABLE IF NOT EXISTS `likes` (
@@ -53,11 +57,13 @@ CREATE TABLE IF NOT EXISTS `likes` (
   `userId` int(10) unsigned NOT NULL,
   PRIMARY KEY (`blogId`,`userId`),
   KEY `FK_likes_users` (`userId`),
-  CONSTRAINT `FK_likes_blogs` FOREIGN KEY (`blogId`) REFERENCES `blogs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_likes_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_likes_blogs` FOREIGN KEY (`blogId`) REFERENCES `blogs` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_likes_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- Listage des données de la table groupomania.likes : ~0 rows (environ)
+/*!40000 ALTER TABLE `likes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 
 -- Listage de la structure de la table groupomania. users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -72,9 +78,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updatedat` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- Les données exportées n'étaient pas sélectionnées.
+-- Listage des données de la table groupomania.users : ~1 rows (environ)
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` (`id`, `name`, `firstname`, `email`, `password`, `imageProfile`, `isadmin`, `createdat`, `updatedat`) VALUES
+	(1, 'Administrateur', 'Administrateur', 'admin@groupomania.com', '$2b$10$S15oPaBJSsN7spOdFllqcuvF2geE67hjKykyP2.WdS2FDRkeig7EG', 'http://localhost:3000/images/profile/profile.png', 0, '2022-07-23 18:02:41', '2022-07-23 18:02:41');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

@@ -6,6 +6,7 @@ import SingleBlog from "@/views/ViewSingleBlog.vue"
 import UpdateBlog from "@/views/ViewUpdateBlog.vue"
 import Profile from "@/views/ViewProfile.vue"
 import Logout from "@/views/ViewLogout.vue"
+import Admin from "@/views/ViewAdmin.vue"
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: "/logout",
     name: "logout",
     component: Logout
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: Admin
   }
 ]
 
