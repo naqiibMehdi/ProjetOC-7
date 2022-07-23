@@ -194,10 +194,27 @@ exports.getAllUsersByAdmin = async (req, res) => {
 }
 
 exports.deleteUserByAdmin = async (req, res) => {
+
+  const oneUser = await User.findOne({where: {id: req.params.userId}, attributes: ["imageProfile"]})
+  const allBlogs = await Blog.findAll({where: {userId: req.params.userId}, attributes: ["imageUrl"]})
+
+
+  if(oneUser){
+    const imageProfile = oneUser.imageProfile.split("/images/profile/")[1]
+    if(imageProfile !== "profile.png"){
+      fs.unlinkSync(`images/profile/${imageProfile}`)
+    }
+  }
+
+  if(allBlogs && allBlogs.length >= 1){
+    allBlogs.forEach(image => {
+      const imageBlog = image.imageUrl.split("/images/")[1]
+      fs.unlinkSync(`images/${imageBlog}`)
+    })
+  }
+
   await User.destroy({where: {id: req.params.userId}})
 
-  res.cookie("jwt", "", {maxAge: 1})
-  res.cookie("admin", "", {maxAge: 1})
   res.status(200).json({message: "utilisateur supprimé avec succès !"})
 }
 
