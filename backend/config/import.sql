@@ -78,12 +78,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updatedat` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- Listage des données de la table groupomania.users : ~1 rows (environ)
+-- Listage des données de la table groupomania.users : ~2 rows (environ)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `name`, `firstname`, `email`, `password`, `imageProfile`, `isadmin`, `createdat`, `updatedat`) VALUES
-	(1, 'Administrateur', 'Administrateur', 'admin@groupomania.com', '$2b$10$S15oPaBJSsN7spOdFllqcuvF2geE67hjKykyP2.WdS2FDRkeig7EG', 'http://localhost:3000/images/profile/profile.png', 0, '2022-07-23 18:02:41', '2022-07-23 18:02:41');
+	(1, 'Administrateur', 'Administrateur', 'admin@groupomania.com', '$2b$10$S15oPaBJSsN7spOdFllqcuvF2geE67hjKykyP2.WdS2FDRkeig7EG', 'http://localhost:3000/images/profile/profile.png', 1, '2022-07-23 18:02:41', '2022-07-23 18:02:41');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

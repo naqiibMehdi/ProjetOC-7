@@ -5,16 +5,20 @@
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Lato, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
 
-body{
+*, *::before, *::after{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
+}
+
+html, body{
+  background: #FFD7D7;
+  height: 100vh;
 }
 </style>

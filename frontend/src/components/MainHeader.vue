@@ -1,7 +1,7 @@
 <template>
   <header class="mainHeader">
-    <img src="" alt="">
-    <nav>
+    <img src="../assets/icon-left-font.svg" alt="" class="header-logo">
+    <nav class="listLinks">
       <ul>
         <li><router-link to="/blog">Accueil</router-link></li>
         <li v-if="isAdmin"><router-link to="/admin">Admin</router-link></li>
@@ -38,5 +38,49 @@ export default {
 </script>
 
 <style>
+.mainHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  height: 180px;
+  background: white
+}
+.mainHeader .listLinks{
+  width: 450px;
+}
 
+.mainHeader ul{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mainHeader ul li{
+  list-style: none;
+}
+
+.mainHeader a{
+  text-decoration: none;
+  color: #FD2D01;
+  position: relative;
+  padding-bottom: 10px;
+  font-size: 18px;
+}
+
+.mainHeader a::before{
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #FD2D01;
+  height: 3px;
+  transform: scaleX(0);
+  transition: transform 300ms ease-in-out;
+}
+
+.mainHeader a:hover::before{
+  transform: scaleX(1);
+}
 </style>

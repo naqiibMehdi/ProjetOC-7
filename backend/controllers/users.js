@@ -70,7 +70,6 @@ exports.login = async (req, res) => {
     const token = jwt.sign({id: user.id}, process.env.KEY, {expiresIn: "24h"})
 
     res.cookie("jwt", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24, SameSite: "None"})
-    res.cookie("admin", user.isadmin, {maxAge: 1000 * 60 * 60 * 24, SameSite: "None"})
     res.cookie("user", user.id, {maxAge: 1000 * 60 * 60 * 24, SameSite: "None"})
 
     res.status(200).json({
@@ -81,7 +80,6 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
   res.cookie("jwt", "", {maxAge: 1})
-  res.cookie("admin", "", {maxAge: 1})
   res.cookie("user", '', {maxAge: 1})
   res.status(200).json("Vous êtes bien déconnecté")
 }
@@ -162,7 +160,6 @@ exports.deleteOneUser = async (req, res) => {
     }
 
     res.cookie("jwt", "", {maxAge: 1})
-    res.cookie("admin", "", {maxAge: 1})
     res.cookie("user", '' , {maxAge: 1})
     res.status(200).json({message: "Votre compte a bien été supprimé !"})
    }

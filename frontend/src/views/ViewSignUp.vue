@@ -4,6 +4,7 @@
     <form method="POST" @submit.prevent="fetchSignup()">
 
       <div class="fields">
+
         <input type="text" name="name" placeholder="Nom" v-model="name" />
         <span v-show="errors.name">{{ errors.name }}</span>
 
@@ -75,7 +76,7 @@ export default {
 .form {
   width: 450px;
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
