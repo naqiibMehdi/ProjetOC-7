@@ -31,7 +31,7 @@ export default {
   methods: {
 
     userIdLocal(){
-      return parseInt(document.cookie.split(";")[1].split("=")[1])
+      return parseInt(document.cookie.split("=")[1])
     },
     //get the status admin 
     getUserData() {

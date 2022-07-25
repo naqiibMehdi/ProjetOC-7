@@ -40,11 +40,6 @@ export default {
   },
 
   async mounted() {
-    const isadmin = document.cookie.split(";")[0].split("=")[1]
-    if(isadmin !== "true" && isadmin !== "false"){
-      this.$router.push("/login")
-      return
-    }
     this.getCards();
   },
 
@@ -66,7 +61,13 @@ export default {
             this.listCards.push(card)
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err)
+          const code = [401, 403]
+          if(code.includes(err.response.status)){
+            this.$router.push("/")
+          }
+        });
     },
 
     postCard() {
@@ -103,7 +104,7 @@ export default {
 
 <style>
 .blog {
-  width: 450px;
-  margin: 15px auto;
+  width: 50%;
+  margin: 25px auto;
 }
 </style>

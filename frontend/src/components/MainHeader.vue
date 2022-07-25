@@ -47,7 +47,7 @@ export default {
   background: white
 }
 .mainHeader .listLinks{
-  width: 450px;
+  width: 400px;
 }
 
 .mainHeader ul{

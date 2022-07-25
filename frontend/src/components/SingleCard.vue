@@ -13,9 +13,10 @@ export default {
 }
 </script>
   
-<style>
-.card img{
-  width: 150px;
-  height: 150px;
+<style scoped>
+img{
+  width: 40px;
+  height: 40px;
 }
+
 </style>

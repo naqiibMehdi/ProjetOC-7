@@ -32,11 +32,6 @@ export default {
     }
   },
   mounted(){
-    const isadmin = document.cookie.split(";")[0].split("=")[1]
-    if(isadmin !== "true" && isadmin !== "false"){
-      this.$router.push("/login")
-      return
-    }
     this.getOneUser()
   },
 
