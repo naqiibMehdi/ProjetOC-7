@@ -3,7 +3,7 @@
   <div class="blog">
     <form method="POST" enctype="multipart/form-data" @submit.prevent="postCard">
       <textarea name="description" id="description" cols="30" rows="10" v-model="description"></textarea>
-      <input type="file" name="image" id="image" ref="myImage" accept="image/jpeg, image/png" @change="previewFile"/>
+      <input type="file" name="image" id="image" ref="myImage" accept="image/jpeg, image/png, image/gif" @change="previewFile"/>
       <Button text="Poster" color="blue"/>
     </form>
     <Card
@@ -104,7 +104,7 @@ export default {
 
 <style>
 .blog {
-  width: 50%;
+  width: 700px;
   margin: 25px auto;
 }
 </style>

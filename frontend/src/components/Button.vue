@@ -1,17 +1,17 @@
 <template>
-  <button :style="{background: color}" :type="type">{{ text }}</button>
+  <button :style="{background: bgdclr, color: color}" :type="type">{{ text }}</button>
 </template>
 
 <script>
 export default {
   name: "Button",
-  props: ["text", "color", "type"]
+  props: ["text", "bgdclr", "type", "color"]
 }
 </script>
 
 <style scoped>
-button {
-  color: white
+button{
+  outline: none;
+  border: none
 }
-
 </style>

@@ -3,28 +3,31 @@
     <div v-if="card.length === 0">
       <p>Article inexistant !</p>
     </div>
-    <div v-else>
-      <SingleCard
-        :description="card[0].description"
-        :imageUrl="card[0].imageUrl"
-        :createdAtHour="dateFormat(card[0].createdAt)"
-        :createdAtTime="timeFormat(card[0].createdAt)"
-      />
-      <Comment
-        v-for="comment in listComments" 
-        :key="comment.id"
-        :id="comment.id"
-        :name="comment.user.name"
-        :firstname="comment.user.firstname"
-        :description="comment.description"
-        :userid="comment.userId"
-      />
-      <form method="POST">
-        <textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.enter="createComment"></textarea>
-      </form>
-      <Button color="blue" text="Modifier l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="$router.push({name: 'updateBlog'})"/>
-      <Button color="red" text="Supprimer l 'article" v-if="isOwner === userIdLocal() || isAdmin" @click="deleteCard"/>
+    <div class="singleCard" v-else>
+      <div class="singleCardComment">
+        <SingleCard
+          :description="card[0].description"
+          :imageUrl="card[0].imageUrl"
+        />
+        <Comment
+          v-for="comment in listComments" 
+          :key="comment.id"
+          :id="comment.id"
+          :name="comment.user.name"
+          :firstname="comment.user.firstname"
+          :description="comment.description"
+          :userid="comment.userId"
+        />
+        <form method="POST">
+          <textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.alt="createComment"></textarea>
+          <span>Appuyez sur touche Alt + Entrée pour valider</span>
+        </form>
     </div>
+    <div class="buttonSingleCard">
+      <Button color="white" bgdclr="blue" text="Modifier l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="$router.push({name: 'updateBlog'})"/>
+      <Button color="white" bgdclr="red" text="Supprimer l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="deleteCard"/>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -114,15 +117,18 @@ export default {
     createComment(e) {
       console.log(e);
       if(e.key === "Enter"){
+
         axios.post(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, {
           description: this.comment,
         }, {withCredentials: true})
+
         .then((res) => {
           this.listComments = []
           this.comment = ""
           this.getComment()
         })
         .catch(err => (this.errors = err.response.data))
+
       }
     },
 
@@ -140,5 +146,43 @@ export default {
 </script>
 
 <style>
+.singleCard{
+  display: flex;
+  align-items: center;
+}
+
+.singleCardComment{
+  width: 650px;
+  margin: 25px 10% 25px 20%;
+}
+
+.singleCardComment textarea{
+  width: 100%;
+  height: 60px;
+  margin-top: 15px;
+  padding: 10px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+}
+
+.singleCardComment textarea:focus{
+  border: solid 2px #fd2d01
+}
+
+.buttonSingleCard{
+  display: flex;
+  flex-direction: column;
+  font-size: 50px;
+  width: 200px;
+}
+
+.buttonSingleCard button{
+  margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
 
 </style>
