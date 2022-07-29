@@ -182,6 +182,7 @@ export default {
   padding-top: 10px;
   padding-bottom: 10px;
   font-size: 18px;
+  border-radius: 5px;
   cursor: pointer;
 }
 

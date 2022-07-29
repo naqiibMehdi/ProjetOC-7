@@ -19,7 +19,7 @@ module.exports = multer({
   fileFilter: function (req, file, cb) {
     const whitelist = ['image/png', 'image/jpeg', 'image/jpg']
     if(!whitelist.includes(file.mimetype)){
-      return cb(new Error("Seules les extensions suivantes sont acceptées: png|jpeg"))
+      return cb(new Error("Seules les extensions suivantes sont acceptées: png | jpeg"))
     }
     cb(null, true)
   }
