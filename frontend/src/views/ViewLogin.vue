@@ -3,26 +3,32 @@
   <div class="form">
     <form method="POST" @submit.prevent="fetchLogin()">
       <div class="fields">
-        <input
-          type="text"
-          name="email"
-          placeholder="ex:exemple@domaine.com"
-          v-model="email"
-        />
+        <div class="field">
+          <InputText
+            type="text"
+            name="email"
+            placeholder="ex: exemple@domaine.com"
+            v-model="email"
+            :class="errors.message ? 'p-invalid' : ''"
+          />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Mot de passe"
-          v-model="password"
-        />
+        <div class="field">
+          <InputText
+            type="password"
+            name="password"
+            placeholder="Mot de passe"
+            v-model="password"
+            :class="errors.message ? 'p-invalid' : ''"
+          />
+        </div>
 
-        <button type="submit">Se connecter</button>
+        <Button label="Se connecter" class="p-button-raised" type="submit"/>
       </div>
 
-      <div class="errors" v-if="errors">
-        {{ errors.message }}
-      </div>
+        <div v-if="errors.message" class="errorConnexion">
+          <span class="p-error">{{ errors.message }}</span>
+        </div>
     </form>
   </div>
 
@@ -31,10 +37,12 @@
 <script>
 import Header from "@/components/Header.vue";
 import axios from "axios"
+import InputText from "primevue/inputtext"
+import Button from "primevue/button"
 
 export default {
   name: "Login",
-  components: { Header },
+  components: { Header, InputText, Button },
   data() {
     return {
       email: "",
@@ -57,17 +65,10 @@ export default {
 </script>
 
 <style>
-.form {
-  width: 450px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
 
-.fields {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.errorConnexion{
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
 }
 </style>

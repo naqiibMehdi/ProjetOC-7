@@ -5,36 +5,51 @@
 
       <div class="fields">
 
-        <input type="text" name="name" placeholder="Nom" v-model="name" />
-        <span v-show="errors.name">{{ errors.name }}</span>
+        <div class="field">
+          <InputText 
+            type="text" 
+            name="name" 
+            placeholder="Nom" 
+            v-model="name" 
+            :class="errors.name ? 'p-invalid' : ''"
+          />
+          <span v-show="errors.name" class="p-error">{{ errors.name }}</span>
+        </div>
 
-        <input
-          type="text"
-          name="firstname"
-          placeholder="Prénom"
-          v-model="firstname"
-          @input="handleErrorFirstName"
-        />
-        <span v-show="errors.firstname">{{ errors.firstname }}</span>
+        <div class="field">
+          <InputText
+            type="text"
+            name="firstname"
+            placeholder="Prénom"
+            :class="errors.firstname ? 'p-invalid' : ''"
+            v-model="firstname"
+          />
+          <span v-show="errors.firstname" class="p-error">{{ errors.firstname }}</span>
+        </div>
 
-        <input
+        <div class="field">
+          <InputText
           type="text"
           name="email"
-          placeholder="ex:exemple@domaine.com"
+          placeholder="ex: exemple@domaine.com"
+          :class="errors.email ? 'p-invalid' : ''"
           v-model="email"
-        />
-        <span v-show="errors.email">{{ errors.email }}</span>
+          />
+          <span v-show="errors.email" class="p-error">{{ errors.email }}</span>
+        </div>
 
-        <input
+        <div class="field">
+          <InputText
           type="password"
           name="password"
           placeholder="Mot de passe"
+          :class="errors.password ? 'p-invalid' : ''"
           v-model="password"
-          @input="checkPassword"
-        />
-        <span v-show="errors.password">{{ errors.password }}</span>
+          />
+          <span v-show="errors.password" class="p-error">{{ errors.password }}</span>
+        </div>
 
-        <button type="submit">Créer un compte</button>
+        <Button label="Créer un compte" class="p-button-raised p-button-success" type="submit"/>
       </div>
     </form>
   </div>
@@ -42,11 +57,13 @@
 
 <script>
 import Header from "@/components/Header.vue";
-import axios from "axios"
+import axios from "axios";
+import InputText from "primevue/inputtext"
+import Button from "primevue/button"
 
 export default {
   name: "Signup",
-  components: { Header },
+  components: { Header, InputText, Button},
   data() {
     return {
       name: "",
@@ -73,17 +90,31 @@ export default {
 </script>
 
 <style>
-.form {
-  width: 450px;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.form{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35%;
+  margin: 100px auto;
+  padding: 50px;
+  border-radius: 5px;
+  background: rgba(187, 190, 208, 1)
 }
 
-.fields {
+.form form{
+  width: 100%;
+}
+
+.fields{
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 25px;
+  width: 100%;
+}
+
+.field{
+  display: flex;
+  flex-direction: column;
+  gap:5px
 }
 </style>

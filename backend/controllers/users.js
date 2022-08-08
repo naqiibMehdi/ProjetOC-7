@@ -23,7 +23,7 @@ exports.signup = (req, res) => {
   let listErrors = {}
 
     if(!schema.validate(password)){
-        return res.status(400).json({password: "Critère du Mot de passe: 1 minuscule, 1 majuscule, 1 chiffre, 8 caractères minimum"})
+        listErrors["password"] = "Critère du Mot de passe: 1 minuscule, 1 majuscule, 1 chiffre, 8 caractères minimum"
     }
      
 
