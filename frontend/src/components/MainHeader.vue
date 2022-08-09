@@ -1,10 +1,14 @@
 <template>
+  
   <header class="mainHeader">
+
     <img src="../assets/icon-left-font.svg" alt="" class="header-logo">
+    <Button class="p-button-danger" label="Postez un article" @click="handleModal"/>
+
     <nav class="listLinks">
       <ul>
         <li><router-link to="/blog">Accueil</router-link></li>
-        <li v-if="isAdmin"><router-link to="/admin">Admin</router-link></li>
+        <li v-show="isAdmin"><router-link to="/admin">Admin</router-link></li>
         <li><router-link to="/profile">Profile</router-link></li>
         <li><router-link to="/logout">Déconnexion</router-link></li>
       </ul>
@@ -14,12 +18,15 @@
 
 <script>
 import axios from "axios"
+import Button from "primevue/button"
+import Modal from "@/components/Modal.vue"
 
 export default {
   name: "MainHeader",
+  components: {Button, Modal},
   data() {
     return {
-      isAdmin: false
+      isAdmin: false,
     }
   },
   mounted(){
@@ -32,6 +39,10 @@ export default {
         this.isAdmin = res.data.isadmin
       })
       .catch(err => console.log(err))
+    },
+
+    handleModal() {
+      this.$emit("open")
     }
   }
 }

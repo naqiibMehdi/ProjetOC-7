@@ -42,7 +42,7 @@ import Button from "primevue/button"
 
 export default {
   name: "Login",
-  components: { Header, InputText, Button },
+  components: { Header, InputText, Button},
   data() {
     return {
       email: "",
