@@ -7,19 +7,22 @@
       <Button text="Supprimer" bgdclr="transparent" color="rgba(78, 81, 102)" v-if="userid === userIdLocal() || isAdmin" @click="deleteComment"/>
     </div>
   </div>
-  <div :data-id="id" v-else>
-    <textarea name="description" id="description" cols="30" rows="1" v-model="comment" @keyup.enter="validateComment"></textarea>
+  <div :data-id="id" class="validateComment" v-else>
+    <Textarea name="description" id="description" cols="30" rows="3" v-model="comment" />
+    <ButtonPrime label="Valider" class="p-button-raised p-button-success" @click="validateComment"/>
   </div>
 </template>
 
 <script>
 import Button from "@/components/Button.vue"
+import ButtonPrime from "primevue/button"
+import Textarea from "primevue/textarea"
 import axios from "axios"
 
 export default {
   name: "Comment",
   props: ["name", "firstname", "description", "id", "userid"],
-  components: { Button },
+  components: { Button, Textarea, ButtonPrime },
   data(){
     return {
       show: true,
@@ -49,32 +52,23 @@ export default {
     },
 
     deleteComment(e){
-      const idComment = e.target.parentElement.parentElement.dataset.id
-
-      axios.delete(`http://localhost:3000/api/comment/${idComment}`, 
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          this.$router.go({name: 'singleBlog'})
-        })
-        .catch((err) => console.log(err));
+      this.$emit("deleted", e.target.parentElement.parentElement.dataset.id)
     },
 
     validateComment(e){
-      const idComment = e.target.parentElement.dataset.id
-      console.log(e.target);
-      axios.put(`http://localhost:3000/api/comment/${idComment}`,
-        {description: this.comment},
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          this.$router.go({name: 'singleBlog'})
-        })
-        .catch((err) => console.log(err));
+      // const idComment = e.target.parentElement.parentElement.dataset.id
+      // console.log(e.target);
+      // axios.put(`http://localhost:3000/api/comment/${idComment}`,
+      //   {description: this.comment},
+      //   {
+      //     headers: { "Content-Type": "application/json" },
+      //     withCredentials: true,
+      //   })
+      //   .then((res) => {
+      //     this.$router.go({name: 'singleBlog'})
+      //   })
+      //   .catch((err) => console.log(err));
+      this.$emit("validated", e.target)
     },
 
     updateComment(e){
@@ -126,5 +120,22 @@ export default {
 .singleComment .listButtonsComment button{
   cursor: pointer;
   font-weight: 700;
+}
+
+.validateComment{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.validateComment textarea{
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+
+.validateComment button{
 }
 </style>

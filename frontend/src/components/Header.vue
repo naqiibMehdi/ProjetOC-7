@@ -1,6 +1,6 @@
 <template>
   <header class="header-form">
-    <img src="../assets/icon-left-font.svg" alt="" class="header-logo">
+    <img src="../assets/icon-left-font-monochrome-black.svg" alt="" class="header-logo">
     <div class="header-links">
       <router-link to="/">Créer un compte</router-link>
       <router-link to="/login">Se connecter</router-link>
@@ -20,12 +20,12 @@ export default {
   align-items: center;
   justify-content: space-around;
   width: 100%;
-  height: 180px;
+  height: 90px;
   background: white
 }
 
 .header-logo{
-  width: 300px;
+  width: 160px;
   height: 100%;
 }
 

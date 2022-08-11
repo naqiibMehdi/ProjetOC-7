@@ -5,7 +5,7 @@
 
 <style>
 #app {
-  font-family: Lato, serif;
+  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -14,6 +14,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Lato, serif;
   
 }
 

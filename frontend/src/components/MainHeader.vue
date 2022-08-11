@@ -2,8 +2,9 @@
   
   <header class="mainHeader">
 
-    <img src="../assets/icon-left-font.svg" alt="" class="header-logo">
-    <Button class="p-button-danger" label="Postez un article" @click="handleModal"/>
+    <img src="../assets/icon-left-font-monochrome-black.svg" alt="" class="header-logo">
+    
+    <Button class="p-button-danger" label="Postez un article" @click="handleModal" :disabled="$route.name === 'Blog' ? false : true"/>
 
     <nav class="listLinks">
       <ul>
@@ -30,7 +31,7 @@ export default {
     }
   },
   mounted(){
-    this.getOneUser()
+    this.getOneUser();
   },
   methods: {
     getOneUser() {
@@ -43,19 +44,21 @@ export default {
 
     handleModal() {
       this.$emit("open")
-    }
+    },
   }
 }
 </script>
 
 <style>
 .mainHeader{
+  position: fixed;
+  top: 0;
   display: flex;
   align-items: center;
   justify-content: space-around;
   width: 100%;
-  height: 130px;
-  background: white
+  height: 90px;
+  background: rgba(255, 255, 255, 0.8)
 }
 .mainHeader .listLinks{
   width: 400px;

@@ -94,6 +94,10 @@ export default {
   padding: 20px;
 }
 
+.card:first-child{
+  margin-top: 150px;
+}
+
 .card-profile{
   display: flex;
   align-items: center;

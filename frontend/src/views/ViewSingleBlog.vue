@@ -1,4 +1,30 @@
 <template>
+  <Modal v-if="open" @fermerModal="handleModal">
+    <form method="post" class="formModal-form" enctype="multipart/form-data" @submit.prevent="updateCard">
+      <Textarea 
+        :autoResize="true" 
+        rows="10" 
+        cols="10" 
+        class="formModal-textarea" 
+        placeholder="Tapez votre post"
+        name="description"
+        id="description"
+        v-model="descriptionCard"
+      />
+      <span v-show="error" class="p-error">{{ error }}</span>
+
+      <input type="file" name="image" id="image" ref="myImage" hidden @change="previewFile"/>
+
+      <Button label="Joindre une image" class="p-button-raised formModal-button" @click="$refs.myImage.click()" />
+
+      <div class="imagePreview" v-show="targetFile">
+        <img :src="targetFile" alt="image de prévisualisation">
+      </div>
+
+      <Button type="submit" label="Valider" class="p-button-raised p-button-success formModal-button"/>
+    </form>
+  </Modal>
+
   <MainHeader />
     <div v-if="card.length === 0">
       <p>Article inexistant !</p>
@@ -6,6 +32,8 @@
     <div class="singleCard" v-else>
       <div class="singleCardComment">
         <SingleCard
+          :name="card[0].user.name"
+          :firstname="card[0].user.firstname"
           :description="card[0].description"
           :imageUrl="card[0].imageUrl"
         />
@@ -17,15 +45,21 @@
           :firstname="comment.user.firstname"
           :description="comment.description"
           :userid="comment.userId"
+          @deleted="commentDeleted"
+          @validated="commentValidated"
         />
         <form method="POST">
-          <textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.alt="createComment"></textarea>
-          <span>Appuyez sur touche Alt + Entrée pour valider</span>
+          <Textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.alt="createComment" />
+          <span v-show="errorComment" class="p-error">{{ errorComment }}</span>
+          <div class="footerForm">
+            <small>Appuyez sur touche <span class="alt">Alt + Entrée</span> pour valider</small>
+            <Button class="p-button-raised" label="Commenter" @click="createComment"/>
+          </div>
         </form>
     </div>
     <div class="buttonSingleCard">
-      <Button color="white" bgdclr="blue" text="Modifier l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="$router.push({name: 'updateBlog'})"/>
-      <Button color="white" bgdclr="red" text="Supprimer l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="deleteCard"/>
+      <Button class="p-button-raised" label="Modifier l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="handleModal"/>
+      <Button class="p-button-raised p-button-danger" label="Supprimer l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="deleteCard"/>
     </div>
   </div>
 </template>
@@ -34,26 +68,34 @@
 import SingleCard from "@/components/SingleCard.vue"
 import MainHeader from "@/components/MainHeader.vue"
 import Comment from "@/components/Comment.vue"
-import Button from "@/components/Button.vue"
+import Button from "primevue/button"
+import Textarea from "primevue/textarea"
+import Modal from "@/components/Modal.vue"
 import axios from "axios"
 
 export default {
   name: "SingleBlog",
-  components: {SingleCard, Button, Comment, MainHeader},
+  components: {SingleCard, Button, Textarea, Comment, MainHeader, Modal},
   data (){
     return {
       card: [],
       listComments: [],
       isOwner: null,
       isAdmin: null,
-      comment: ""
+      comment: "",
+      descriptionCard: "",
+      targetFile: "",
+      imageUrl: "",
+      open: false,
+      errorComment: "",
+      error: ""
+      
     }
   },
 
   async mounted(){
     (this.getCard()); 
     (this.getComment());
-    (this.getUserData())
   },
 
   methods: {
@@ -61,18 +103,21 @@ export default {
       return parseInt(document.cookie.split("=")[1])
     },
 
-    //get the status admin 
-    getUserData() {
-      axios.get(`http://localhost:3000/api/auth/user/profile`, 
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          this.isAdmin = res.data.isadmin
-        })
-        .catch((err) => console.log(err));
+    handleModal(){
+    this.open = !this.open
     },
+
+    previewFile() {
+      if(this.$refs.myImage.files[0]){
+
+        const currentImage = this.$refs.myImage.files[0]
+        this.targetFile = URL.createObjectURL(currentImage)
+        URL.revokeObjectURL(URL.createObjectURL(currentImage))
+        return this.imageUrl = this.$refs.myImage.files[0]
+        
+      }
+    },
+
     //section about card data
     getCard() {
       axios.get(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
@@ -83,8 +128,31 @@ export default {
         .then((res) => {
           this.card.push(res.data)
           this.isOwner = res.data.userId
+          this.descriptionCard = res.data.description
+          this.targetFile = res.data.imageUrl
+          this.isAdmin = res.data.user.isadmin
         })
         .catch((err) => console.log(err));
+    },
+
+    updateCard() {
+      const listData = new FormData();
+      listData.append("description", this.descriptionCard);
+      listData.append("imageUrl", this.previewFile());
+
+      axios
+        .put(
+          `http://localhost:3000/api/blogs/${this.$route.params.id}`,
+          listData,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        )
+        .then(() => {
+          this.$router.push("/blog");
+        })
+        .catch((err) => this.error = err.response.data);
     },
 
     deleteCard() {
@@ -115,21 +183,55 @@ export default {
     },
 
     createComment(e) {
-      console.log(e);
-      if(e.key === "Enter"){
+      if((e.key === "Enter" && e.type === "keyup") || e.type === "click"){
 
-        axios.post(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, {
+        axios.post(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, 
+        {
           description: this.comment,
-        }, {withCredentials: true})
+        }
+        , {withCredentials: true})
 
         .then((res) => {
           this.listComments = []
           this.comment = ""
           this.getComment()
         })
-        .catch(err => (this.errors = err.response.data))
+        .catch(err => this.errorComment = err.response.data.message)
 
       }
+    },
+
+    commentValidated(target) {
+    const comment = target.parentElement.previousSibling.value
+    const idComment = target.parentElement.parentElement.dataset.id
+
+      axios.put(`http://localhost:3000/api/comment/${idComment}`,
+        {description: comment},
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then((res) => {
+          this.listComments = []
+          this.comment = ""
+          this.getComment()
+        })
+        .catch((err) => console.log(err));
+    },
+
+    commentDeleted(idComment) {
+
+      axios.delete(`http://localhost:3000/api/comment/${idComment}`, 
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then((res) => {
+          this.listComments = []
+          this.comment = ""
+          this.getComment()
+        })
+        .catch((err) => console.log(err));
     },
 
     dateFormat(date){
@@ -166,8 +268,14 @@ export default {
   border-radius: 5px;
 }
 
-.singleCardComment textarea:focus{
-  border: solid 2px #fd2d01
+.singleCardComment .alt{
+  color: #fd2d01
+}
+.footerForm{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .buttonSingleCard{

@@ -3,7 +3,6 @@ import Signup from "@/views/ViewSignUp.vue"
 import Login from "@/views/ViewLogin.vue"
 import Blog from "@/views/ViewBlog.vue"
 import SingleBlog from "@/views/ViewSingleBlog.vue"
-import UpdateBlog from "@/views/ViewUpdateBlog.vue"
 import Profile from "@/views/ViewProfile.vue"
 import Logout from "@/views/ViewLogout.vue"
 import Admin from "@/views/ViewAdmin.vue"
@@ -28,11 +27,6 @@ const routes = [
     path: "/blog/:id",
     name: "singleBlog",
     component: SingleBlog
-  },
-  {
-    path: "/blog/:id/update",
-    name: "updateBlog",
-    component: UpdateBlog
   },
   {
     path: "/profile",

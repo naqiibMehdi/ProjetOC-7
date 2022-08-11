@@ -1,12 +1,12 @@
 <template>
   <Teleport to="body">
-      <Transition name="fade">
+      <transition name="fade">
         <div class="overlay" @click.self="closeModal">
           <div class="formModal">
             <slot></slot>
           </div>
-      </div>
-      </Transition>
+        </div>
+      </transition>
   </Teleport>
 </template>
 
@@ -18,10 +18,10 @@ import Textarea from 'primevue/textarea'
 export default {
   name: "Modal",
   components: {Button, Textarea},
-  emits: ["fermer"],
+  emits: ["fermerModal"],
   methods: {
     closeModal() {
-      this.$emit("fermer")
+      this.$emit("fermerModal")
     },
   }
 }
@@ -35,7 +35,7 @@ export default {
     right: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;

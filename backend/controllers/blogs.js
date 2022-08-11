@@ -61,7 +61,7 @@ exports.getAllBlogs = async (req, res) => {
 exports.getOneBlog = async (req, res) => {
   try{
     const oneBlog = await Blog.findOne({where: {id: req.params.id}, 
-      include: {model: User, attributes: ["name", "firstname", "imageProfile"]}
+      include: {model: User, attributes: ["name", "firstname", "imageProfile", "isadmin"]}
     })
     if(!oneBlog){
       throw Error("article inexistant")
@@ -75,6 +75,11 @@ exports.getOneBlog = async (req, res) => {
 
 exports.updateOneBlog = async (req, res) => {
   try{
+
+      if(!req.body.description){
+        throw Error("Vous devez au moins saisir une description")
+      }
+
       if(!req.file){
 
         await Blog.update({description: req.body.description}, {where: {id: req.params.id}})

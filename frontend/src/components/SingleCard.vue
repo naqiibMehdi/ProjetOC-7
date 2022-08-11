@@ -1,4 +1,5 @@
 <template>
+    <h1 class="dataOneCard"><span>{{ name }} {{ firstname }}</span> a posté cet article</h1>
    <article class="singleBlog">
       <p>{{ description }}</p>
       <img :src="imageUrl" alt="image d'un blog" v-if="imageUrl"/>
@@ -8,11 +9,14 @@
 <script>
 export default {
   name: "SingleCard",
-  props: ["id", "description", "imageUrl"]
+  props: ["id", "description", "imageUrl", "name", "firstname"]
 }
 </script>
   
 <style>
+.dataOneCard span{
+  color:#fd2d01
+}
 .singleBlog{
   width: 100%;
   background: rgba(255,255,255,0.8);

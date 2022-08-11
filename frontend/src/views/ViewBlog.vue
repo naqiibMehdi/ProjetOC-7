@@ -1,5 +1,5 @@
 <template>
-  <Modal @fermer="handleModal" v-if="open">
+  <Modal @fermerModal="handleModal" v-if="open">
     <form method="post" class="formModal-form" enctype="multipart/form-data" @submit.prevent="postCard">
 
           <Textarea 
@@ -25,13 +25,10 @@
           <Button type="submit" label="Poster" class="p-button-raised p-button-success formModal-button"/>
         </form>
   </Modal>
+  
 <MainHeader @open="handleModal"/>
+
   <div class="blog">
-    <!-- <form method="POST" enctype="multipart/form-data" @submit.prevent="postCard">
-      <textarea name="description" id="description" cols="30" rows="10" v-model="description"></textarea>
-      <input type="file" name="image" id="image" ref="myImage" accept="image/jpeg, image/png, image/gif" @change="previewFile"/>
-      <Button text="Poster" color="blue"/>
-    </form> -->
     <Card
       v-for="card in listCards"
       :key="card.id"

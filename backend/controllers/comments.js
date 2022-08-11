@@ -8,7 +8,7 @@ exports.createComment = async (req, res) => {
     const blog = await Blog.findOne({where: {id: req.params.id}})
 
     if(!description){
-      res.status(400).json({message: "Vous devez au moins saisir une description"})
+      return res.status(400).json({message: "Vous devez au moins saisir une description"})
     }
 
     if(blog){
