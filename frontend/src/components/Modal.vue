@@ -79,7 +79,8 @@ export default {
     height: 200px;
     border-radius: 5px;
     border: solid 1px #4E5166;
-    padding: 3px
+    padding: 3px;
+    object-fit: cover;
   }
 
   /* pour les transitions */

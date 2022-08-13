@@ -94,6 +94,7 @@ export default {
   },
 
   async mounted(){
+    (this.getOneUser());
     (this.getCard()); 
     (this.getComment());
   },
@@ -118,6 +119,17 @@ export default {
       }
     },
 
+    //get one User
+    getOneUser() {
+      axios.get(`http://localhost:3000/api/auth/user/profile`, 
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then(res => this.isAdmin = res.data.isadmin)
+        .catch(err => console.log(err))
+    },
+
     //section about card data
     getCard() {
       axios.get(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
@@ -130,7 +142,6 @@ export default {
           this.isOwner = res.data.userId
           this.descriptionCard = res.data.description
           this.targetFile = res.data.imageUrl
-          this.isAdmin = res.data.user.isadmin
         })
         .catch((err) => console.log(err));
     },
@@ -220,6 +231,7 @@ export default {
     },
 
     commentDeleted(idComment) {
+      //appel au composant
 
       axios.delete(`http://localhost:3000/api/comment/${idComment}`, 
         {
@@ -251,6 +263,7 @@ export default {
 .singleCard{
   display: flex;
   align-items: center;
+  margin-top: 110px
 }
 
 .singleCardComment{

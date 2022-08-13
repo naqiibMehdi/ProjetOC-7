@@ -4,11 +4,11 @@
 
     <img src="../assets/icon-left-font-monochrome-black.svg" alt="" class="header-logo">
     
-    <Button class="p-button-danger" label="Postez un article" @click="handleModal" :disabled="$route.name === 'Blog' ? false : true"/>
 
     <nav class="listLinks">
       <ul>
         <li><router-link to="/blog">Accueil</router-link></li>
+        <li @click="handleModal" v-if="$route.name === 'Blog' ? true : false"><a>Poster un article</a></li>
         <li v-show="isAdmin"><router-link to="/admin">Admin</router-link></li>
         <li><router-link to="/profile">Profile</router-link></li>
         <li><router-link to="/logout">Déconnexion</router-link></li>
@@ -58,15 +58,15 @@ export default {
   justify-content: space-around;
   width: 100%;
   height: 90px;
-  background: rgba(255, 255, 255, 0.8)
+  background: rgb(255, 255, 255)
 }
 .mainHeader .listLinks{
-  width: 400px;
+  width: 30%;
 }
 
 .mainHeader ul{
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 100%;
 }
 
@@ -92,6 +92,10 @@ export default {
   height: 3px;
   transform: scaleX(0);
   transition: transform 300ms ease-in-out;
+}
+
+.mainHeader a:hover{
+  cursor: pointer;
 }
 
 .mainHeader a:hover::before{
