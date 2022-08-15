@@ -61,7 +61,7 @@ export default {
   background: rgb(255, 255, 255)
 }
 .mainHeader .listLinks{
-  width: 30%;
+  width: 550px;
 }
 
 .mainHeader ul{

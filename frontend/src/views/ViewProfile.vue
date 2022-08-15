@@ -1,4 +1,5 @@
 <template>
+  <Dialog :deleteDialog="deleteUser" />
   <MainHeader />
   <form method="POST">
     <input type="file" name="imageProfile" id="imageProfile" ref="myImage" hidden @change="updateImageUser">
@@ -9,21 +10,22 @@
       <i class="fa-solid fa-camera" @click="$refs.myImage.click()"></i>
     </div>
     <p class="name">{{ name }} {{ firstname }}</p>
-    <p class="email"><span>Email:</span> {{ email }}</p>
-    <p class="createDate"><span>Crée le:</span> {{ dateFormat(createdat) }}</p>
-    <Button text="Supprimer mon compte" bgdclr="red" color="white"  @click="deleteUser"/>
+    <p class="email"><span class="info">Email:</span> {{ email }}</p>
+    <p class="createDate"><span class="info">Crée le:</span> {{ dateFormat(createdat) }}</p>
+    <Button icon="pi pi-times" class="p-button-raised p-button-danger" label="Supprimer mon compte" @click="deleteUser"/>
     <span class="error" v-if="errorFile">{{ errorFile }}</span>
   </div>
 </template>
 
 <script>
 import MainHeader from "@/components/MainHeader.vue"
-import Button from "@/components/Button.vue"
+import Button from "primevue/button"
+import Dialog from "@/components/Dialog.vue"
 import axios from "axios"
 
 export default {
   name: "Profile",
-  components: { MainHeader, Button},
+  components: { MainHeader, Button, Dialog},
   data() {
     return{
       name: "",
@@ -31,7 +33,8 @@ export default {
       imageProfile: "",
       email: "",
       createdat: "",
-      errorFile: ""
+      errorFile: "",
+      open: false
     }
   },
   mounted(){
@@ -71,15 +74,25 @@ export default {
     },
 
     deleteUser() {
-      const test = confirm("etes-vous sur de vouloir supprimer votre profile ?")
-      if(test){
-          axios.delete("http://localhost:3000/api/auth/user/profile", {withCredentials: true}
-        )
-        .then(() =>  this.$router.push("/"))
-        .catch(err => console.log(err))
-      }else{
-        return
-      }
+      this.$confirm.require({
+        message: "Etes-vous sûr de vouloir supprimer votre compte ?",
+        header: "Suppression",
+        acceptClass: 'p-button-danger',
+        icon: "pi pi-info-circle",
+        accept: () => {
+            //callback to execute when user confirms the action
+          axios.delete("http://localhost:3000/api/auth/user/profile", {withCredentials: true})
+          .then(() =>  this.$router.push("/"))
+          .catch(err => console.log(err))
+          },
+          reject: () => {
+            //callback to execute when user rejects the action
+            return
+          },
+      });
+
+      
+      
       
     },
 
@@ -144,7 +157,7 @@ export default {
   font-weight: 700;
 }
 
-.userProfile span{
+.userProfile .info{
   text-decoration: underline;
   color: #4E5166;
   font-weight: 700;
