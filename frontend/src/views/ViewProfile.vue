@@ -53,7 +53,12 @@ export default {
         this.email = res.data.email
         this.createdat = res.data.createdat
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+          const code = [401, 403]
+          if(code.includes(err.response.status)){
+            this.$router.push("/")
+          }
+      })
     },
 
     updateImageUser() {

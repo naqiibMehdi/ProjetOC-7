@@ -30,9 +30,9 @@ exports.signup = (req, res) => {
     bcrypt.hash(password, 10)
     .then((hashPassword) => {
       const user = new User({
-        name,
+        name: name.toUpperCase(),
         firstname,
-        email,
+        email: email.toLowerCase(),
         password: hashPassword,
         imageProfile: `${req.protocol}://${req.get("host")}/images/profile/profile.png`,
         isadmin: false

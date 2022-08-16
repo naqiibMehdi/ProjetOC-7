@@ -88,8 +88,18 @@ exports.updateOneBlog = async (req, res) => {
       }else{
 
         const blog = await Blog.findOne({where: {id: req.params.id}})
-        const file = blog.imageUrl.split("/images/")[1]
+        let file = blog.imageUrl
+      
+        if(!file){
+          await Blog.update({
+            ...req.body,
+            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+          }, {where: {id: blog.id}})
 
+          return res.status(200).json({message: "description et image mis à jour !"})
+        }
+
+        file = file.split("/images/")[1]
         fs.unlink(`images/${file}`, async () => {
           await Blog.update({
             ...req.body,

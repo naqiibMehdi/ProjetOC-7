@@ -8,13 +8,22 @@ import ConfirmDialog from "primevue/confirmdialog";
 export default {
   name: "Dialog",
   components: {ConfirmDialog},
-  props: ["deleteDialog"],
-  created(){
-    this.supprimer()
-  },
+  props: {
+    deleteDialog: {
+      type: Function
+        }, 
+    deleteComment: {
+      type: Function,
+      required: false
+      }
+    },
   methods: {
     supprimer(){
       return this.deleteDialog()
+    },
+
+    suppComment() {
+      return this.deleteComment()
     }
   }
 };

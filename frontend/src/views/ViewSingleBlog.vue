@@ -1,4 +1,5 @@
 <template>
+  <Dialog :deleteDialog="deleteCard" :deleteComment="commentDeleted" />
   <Modal v-if="open" @fermerModal="handleModal">
     <form method="post" class="formModal-form" enctype="multipart/form-data" @submit.prevent="updateCard">
       <Textarea 
@@ -71,11 +72,12 @@ import Comment from "@/components/Comment.vue"
 import Button from "primevue/button"
 import Textarea from "primevue/textarea"
 import Modal from "@/components/Modal.vue"
+import Dialog from "@/components/Dialog.vue"
 import axios from "axios"
 
 export default {
   name: "SingleBlog",
-  components: {SingleCard, Button, Textarea, Comment, MainHeader, Modal},
+  components: {SingleCard, Button, Textarea, Comment, MainHeader, Modal, Dialog},
   data (){
     return {
       card: [],
@@ -167,15 +169,27 @@ export default {
     },
 
     deleteCard() {
-      axios.delete(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then(() => {
-          this.$router.push("/blog")
-        })
-        .catch((err) => console.log(err));
+      this.$confirm.require({
+        message: "Etes-vous sûr de vouloir supprimer cet article ?",
+        header: "Suppression",
+        acceptClass: "p-button-danger",
+        accept: () => {
+
+          axios.delete(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
+            {
+              headers: { "Content-Type": "application/json" },
+              withCredentials: true,
+            })
+            .then(() => {
+              this.$router.push("/blog")
+            })
+            .catch((err) => console.log(err));
+        },
+        reject: () => {
+          return
+        }
+      })
+
     },
 
     //section about comments data
@@ -232,28 +246,28 @@ export default {
 
     commentDeleted(idComment) {
       //appel au composant
+      this.$confirm.require({
+        message: "Etes-vous sûr de vouloir supprimer ce commentaire ?",
+        header: "Suppression",
+        acceptClass: "p-button-danger",
+        accept: () => {
+          axios.delete(`http://localhost:3000/api/comment/${idComment}`, 
+            {
+              headers: { "Content-Type": "application/json" },
+              withCredentials: true,
+            })
+            .then((res) => {
+              this.listComments = []
+              this.comment = ""
+              this.getComment()
+            })
+            .catch((err) => console.log(err));
+        },
+        reject: () => {
+          return
+        }
+      })
 
-      axios.delete(`http://localhost:3000/api/comment/${idComment}`, 
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          this.listComments = []
-          this.comment = ""
-          this.getComment()
-        })
-        .catch((err) => console.log(err));
-    },
-
-    dateFormat(date){
-      const dateCreate = new Date(date)
-      const options = {year: 'numeric', month: 'numeric', day:'numeric'}
-      return dateCreate.toLocaleDateString('fr-FR', options)
-    },
-
-    timeFormat(time){
-      return new Date(time).toLocaleTimeString('fr-FR', {hour: 'numeric', minute: 'numeric'})
     }
   }
 }

@@ -100,8 +100,10 @@ export default {
     postCard() {
       axios.post("http://localhost:3000/api/blogs",
           this.dataForm(),
-          {withCredentials: true, headers: {"Content-Type": "multipart/form-data"}}
-        )
+          {
+            withCredentials: true, 
+            headers: {"Content-Type": "multipart/form-data"}
+          })
         .then(() => {
           this.targetFile = ""
           this.error = ""
@@ -109,6 +111,7 @@ export default {
           this.open = false
           this.listCards = []
           return this.getCards()
+          // this.test()
           
         })
         .catch((err) => {
@@ -141,6 +144,12 @@ export default {
       this.open = !this.open
     }
   },
+  // computed: {
+  //   test(){
+  //     const newTab = this.listCards.map(val => val)
+  //     console.log(newTab);
+  //   }
+  // }
 };
 </script>
 

@@ -108,6 +108,7 @@ export default {
   width: 50px;
   height: 50px;
   margin-right: 10px;
+  border-radius: 50%;
 }
 
 .card-profile h3{
@@ -134,6 +135,7 @@ export default {
   width: 100%;
   height: 450px;
   border-radius: 5px;
+  object-fit: cover;
 }
 
 .card-bottom{

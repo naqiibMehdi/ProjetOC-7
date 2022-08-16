@@ -56,18 +56,6 @@ export default {
     },
 
     validateComment(e){
-      // const idComment = e.target.parentElement.parentElement.dataset.id
-      // console.log(e.target);
-      // axios.put(`http://localhost:3000/api/comment/${idComment}`,
-      //   {description: this.comment},
-      //   {
-      //     headers: { "Content-Type": "application/json" },
-      //     withCredentials: true,
-      //   })
-      //   .then((res) => {
-      //     this.$router.go({name: 'singleBlog'})
-      //   })
-      //   .catch((err) => console.log(err));
       this.$emit("validated", e.target)
     },
 
@@ -135,7 +123,4 @@ export default {
   margin-bottom: 10px;
 }
 
-
-.validateComment button{
-}
 </style>
