@@ -1,20 +1,20 @@
 <template>
   <Dialog :deleteDialog="deleteUser" />
   <MainHeader />
-  <form method="POST">
-    <input type="file" name="imageProfile" id="imageProfile" ref="myImage" hidden @change="updateImageUser">
-  </form>
-  <div class="userProfile">
-    <div class="picture">
-      <img :src="imageProfile" alt="image du profile">
-      <i class="fa-solid fa-camera" @click="$refs.myImage.click()"></i>
+    <form method="POST">
+      <input type="file" name="imageProfile" id="imageProfile" ref="myImage" accept="image/jpeg, image/png, image/gif" hidden @change="updateImageUser">
+    </form>
+    <div class="userProfile">
+      <div class="picture">
+        <img :src="imageProfile" alt="image du profile">
+        <i class="fa-solid fa-camera" @click="$refs.myImage.click()"></i>
+      </div>
+      <p class="name">{{ name }} {{ firstname }}</p>
+      <p class="email"><span class="info">Email:</span> {{ email }}</p>
+      <p class="createDate"><span class="info">Crée le:</span> {{ dateFormat(createdat) }}</p>
+      <Button icon="pi pi-times" class="p-button-raised p-button-danger" label="Supprimer mon compte" @click="deleteUser"/>
+      <span class="error" v-if="errorFile">{{ errorFile }}</span>
     </div>
-    <p class="name">{{ name }} {{ firstname }}</p>
-    <p class="email"><span class="info">Email:</span> {{ email }}</p>
-    <p class="createDate"><span class="info">Crée le:</span> {{ dateFormat(createdat) }}</p>
-    <Button icon="pi pi-times" class="p-button-raised p-button-danger" label="Supprimer mon compte" @click="deleteUser"/>
-    <span class="error" v-if="errorFile">{{ errorFile }}</span>
-  </div>
 </template>
 
 <script>

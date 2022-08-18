@@ -58,9 +58,9 @@
           </div>
         </form>
     </div>
-    <div class="buttonSingleCard">
-      <Button class="p-button-raised" label="Modifier l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="handleModal"/>
-      <Button class="p-button-raised p-button-danger" label="Supprimer l'article" v-if="isOwner === userIdLocal() || isAdmin" @click="deleteCard"/>
+    <div class="buttonSingleCard" v-if="isOwner === userIdLocal() || isAdmin">
+      <Button class="p-button-raised" label="Modifier l'article" @click="handleModal"/>
+      <Button class="p-button-raised p-button-danger" label="Supprimer l'article"  @click="deleteCard"/>
     </div>
   </div>
 </template>

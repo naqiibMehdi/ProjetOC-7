@@ -8,8 +8,7 @@ const passwordValidator = require("password-validator")
 require("dotenv").config()
 
 
-
-exports.signup = (req, res) => {
+const checkPwd = () => {
   const schema = new passwordValidator()
   schema
   .is().min(8)
@@ -18,41 +17,46 @@ exports.signup = (req, res) => {
   .has().lowercase(1)
   .has().digits(1)
   .has().not().spaces()
+  return schema
+}
+
+
+exports.signup = (req, res) => {
 
   const {name, firstname, email, password} = req.body
   let listErrors = {}
 
-    if(!schema.validate(password)){
-        listErrors["password"] = "Critère du Mot de passe: 1 minuscule, 1 majuscule, 1 chiffre, 8 caractères minimum"
-    }
+  if(!checkPwd().validate(password)){
+      listErrors["password"] = "Critère du Mot de passe: 1 minuscule, 1 majuscule, 1 chiffre, 8 caractères minimum"
+  }
      
 
-    bcrypt.hash(password, 10)
-    .then((hashPassword) => {
-      const user = new User({
-        name: name.toUpperCase(),
-        firstname,
-        email: email.toLowerCase(),
-        password: hashPassword,
-        imageProfile: `${req.protocol}://${req.get("host")}/images/profile/profile.png`,
-        isadmin: false
-      })
-      user.save()
-        .then(() => res.status(201).json({ message: "Utilsateur créé !" }))
-        .catch((err) => {
-          for(let error of err.errors){
-            listErrors[error.path] = error.message
-          }
-          res.status(400).json(listErrors)
-        })
+  bcrypt.hash(password, 10)
+  .then((hashPassword) => {
+    const user = new User({
+      name: name.toUpperCase(),
+      firstname,
+      email: email.toLowerCase(),
+      password: hashPassword,
+      imageProfile: `${req.protocol}://${req.get("host")}/images/profile/profile.png`,
+      isadmin: false
     })
-    .catch(err => res.status(400).json({err}))
+    user.save()
+      .then(() => res.status(201).json({ message: "Utilsateur créé !" }))
+      .catch((err) => {
+        for(let error of err.errors){
+          listErrors[error.path] = error.message
+        }
+        res.status(400).json(listErrors)
+      })
+  })
+  .catch(err => res.status(400).json({err}))
      
 }
 
 exports.login = async (req, res) => {
   
-  if(!req.body.email || !req.body.password){
+  if(!req.body.email && !req.body.password){
     return res.status(400).json({message: "Veuillez remplir tous les champs !"})
   }
     const user = await User.findOne({where: {email: req.body.email}})
