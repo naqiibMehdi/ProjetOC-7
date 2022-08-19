@@ -6,8 +6,10 @@ import "primevue/resources/themes/saga-blue/theme.css"
 import "primevue/resources/primevue.min.css"
 import "primeicons/primeicons.css"
 import router from './router'
+import Store from "@/store/index.js"
 
 createApp(App)
+.use(Store)
 .use(router)
 .use(PrimeVue)
 .use(ConfirmationService)

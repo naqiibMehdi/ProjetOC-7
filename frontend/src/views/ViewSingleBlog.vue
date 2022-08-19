@@ -226,11 +226,10 @@ export default {
       }
     },
 
-    commentValidated(target) {
-    const comment = target.parentElement.previousSibling.value
-    const idComment = target.parentElement.parentElement.dataset.id
+    commentValidated(comm, id) {
+    const comment = comm.target.parentElement.previousSibling.value
 
-      axios.put(`http://localhost:3000/api/comment/${idComment}`,
+      axios.put(`http://localhost:3000/api/comment/${id}`,
         {description: comment},
         {
           headers: { "Content-Type": "application/json" },

@@ -120,14 +120,19 @@ exports.deleteOneBlog = async (req, res) => {
   try{
     const blog = await Blog.findOne({where: {id: req.params.id}})
 
-    if(blog){
+    if(!blog.imageUrl){
+      await Blog.destroy({where: {id: blog.id}})
+      return res.status(200).json({message: "Blog supprimé !"})
+    }
+
+    if(blog.imageUrl){
 
       const file = blog.imageUrl.split("/images/")[1]
 
       fs.unlink(`images/${file}`, async () => {
 
         await Blog.destroy({where: {id: blog.id}})
-        res.status(200).json({message: "Blog supprimé !"})
+        return res.status(200).json({message: "Blog supprimé !"})
 
       })
     }else{

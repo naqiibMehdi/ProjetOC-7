@@ -97,26 +97,29 @@ export default {
         });
     },
 
+
     postCard() {
-      axios.post("http://localhost:3000/api/blogs",
-          this.dataForm(),
-          {
-            withCredentials: true, 
-            headers: {"Content-Type": "multipart/form-data"}
-          })
-        .then(() => {
-          this.targetFile = ""
-          this.error = ""
-          this.description = ""
-          this.open = false
-          this.listCards = []
-          return this.getCards()
-          // this.test()
+      this.$store.dispatch("createBlog", this.dataForm())
+
+      // axios.post("http://localhost:3000/api/blogs",
+      //     this.dataForm(),
+      //     {
+      //       withCredentials: true, 
+      //       headers: {"Content-Type": "multipart/form-data"}
+      //     })
+      //   .then(() => {
+      //     this.targetFile = ""
+      //     this.error = ""
+      //     this.description = ""
+      //     this.open = false
+      //     this.listCards = []
+      //     return this.getCards()
+      //     // this.test()
           
-        })
-        .catch((err) => {
-          this.error = err.response.data
-        });
+      //   })
+      //   .catch((err) => {
+      //     this.error = err.response.data
+      //   });
     },
 
     previewFile() {

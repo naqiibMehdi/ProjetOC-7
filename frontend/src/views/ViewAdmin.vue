@@ -3,7 +3,7 @@
   <MainHeader />
   <h1>Liste des utilisateurs</h1>
     <div class="userList">
-      <Card v-for="user in users" :key="user.id" :data-id="user.id">
+      <Card v-for="user in users" :key="user.id">
         <template #header>
           <img :src="user.imageProfile" alt="image du profile">
         </template>
@@ -14,15 +14,15 @@
           <div class="dataUser">
           <p><span>Email:</span> <span class="emailUser">{{ user.email }}</span></p>
           <p><span>Status:</span> <span :style="{color: user.isadmin ? '#5e8f32' : '#fd2d01', fontWeight: 'bold'}">{{ user.isadmin ? "Administrateur" : "Utilisateur" }}</span></p>
-        </div>
+          </div>
         </template>
         <template #footer>
           <div class="buttonsList">
-          <Button label="Changer le status" class="p-button-raised p-button-success" @click="handleStatus"/>
-          <Button label="Supprimer le compte" class="p-button-raised p-button-danger" @click="deleteUserAccount"/>
-        </div>
+          <Button label="Changer le status" class="p-button-raised p-button-success" @click="handleStatus(user.id)"/>
+          <Button label="Supprimer le compte" class="p-button-raised p-button-danger" @click="deleteUserAccount(user.id)"/>
+          </div>
         </template>
-    </Card>
+      </Card>
     </div>
 </template>
 
@@ -61,8 +61,8 @@ export default {
       })
     },
 
-    handleStatus(e) {
-      const userId = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.id
+    handleStatus(id) {
+      const userId = id
 
       this.$confirm.require({
         message: "Voulez-vous changer le statut de cet utilsateur ?",
@@ -83,8 +83,8 @@ export default {
 
     },
 
-    deleteUserAccount(e) {
-      const userId = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.id
+    deleteUserAccount(id) {
+      const userId = id
 
       this.$confirm.require({
         message: "Etes-vous sûr de vouloir supprimer le compte de cet utilsateur ?",
