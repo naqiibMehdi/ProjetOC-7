@@ -12,7 +12,7 @@
             id="description"
             v-model="description"
           />
-          <span v-show="error" class="p-error">{{ error }}</span>
+          <span v-show="$store.state.errorBlog" class="p-error">{{ $store.state.errorBlog }}</span>
 
           <input type="file" name="image" id="image" ref="myImage" hidden @change="previewFile"/>
 
@@ -30,7 +30,7 @@
 
   <div class="blog">
     <Card
-      v-for="card in listCards"
+      v-for="card in getCards"
       :key="card.id"
       :id="card.id"
       :description="card.description"
@@ -66,8 +66,15 @@ export default {
     };
   },
 
-  async mounted() {
-    this.getCards();
+  async created() {
+    this.$store.dispatch("setBlogs")
+    },
+
+  computed: {
+    getCards() {
+      return this.$store.getters.getBlogs
+    
+    }
   },
 
   methods: {
@@ -78,48 +85,32 @@ export default {
       return form
     },
 
-    getCards() {
-      axios.get("http://localhost:3000/api/blogs", {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          for(let card of res.data){
-            this.listCards.push(card)
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-          const code = [401, 403]
-          if(code.includes(err.response.status)){
-            this.$router.push("/")
-          }
-        });
-    },
+      postCard() {
+      this.$store.dispatch("createBlog", {payload: this.dataForm(), open: this.open = false, desc: this.description})
+      
+    
+        
+      
 
-
-    postCard() {
-      // this.$store.dispatch("createBlog", this.dataForm())
-
-      axios.post("http://localhost:3000/api/blogs",
-          this.dataForm(),
-          {
-            withCredentials: true, 
-            headers: {"Content-Type": "multipart/form-data"}
-          })
-        .then(() => {
-          this.targetFile = ""
-          this.error = ""
-          this.description = ""
-          this.open = false
-          this.listCards = []
-          return this.getCards()
-          // this.test()
+      // axios.post("http://localhost:3000/api/blogs",
+      //     this.dataForm(),
+      //     {
+      //       withCredentials: true, 
+      //       headers: {"Content-Type": "multipart/form-data"}
+      //     })
+      //   .then(() => {
+      //     this.targetFile = ""
+      //     this.error = ""
+      //     this.description = ""
+      //     this.open = false
+      //     this.listCards = []
+      //     return this.getCards()
+      //     // this.test()
           
-        })
-        .catch((err) => {
-          this.error = err.response.data
-        });
+      //   })
+      //   .catch((err) => {
+      //     this.error = err.response.data
+      //   });
     },
 
     previewFile() {
@@ -147,12 +138,6 @@ export default {
       this.open = !this.open
     }
   },
-  // computed: {
-  //   test(){
-  //     const newTab = this.listCards.map(val => val)
-  //     console.log(newTab);
-  //   }
-  // }
 };
 </script>
 

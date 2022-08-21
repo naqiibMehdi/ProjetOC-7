@@ -26,8 +26,14 @@ exports.createBlog = async (req, res) => {
         })
       }
    
-    await blog.save()
-    res.status(201).json({ message: "Blog créé avec succès !" })
+    const lastBlogSave = await blog.save()
+
+    const lastBlog = await Blog.findOne({
+      where: {id: lastBlogSave.id},
+      include: {model: User, attributes: ["name", "firstname", "imageProfile"]},
+    })
+
+    res.status(201).json(lastBlog)
 
   }
   catch (err) {
