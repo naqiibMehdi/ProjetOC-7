@@ -153,4 +153,10 @@ export default {
   color: #4E5166;
   font-weight: 700;
 }
+
+@media all and (max-width: 768px){
+  .card-middle img{
+  height: 350px;
+}
+}
 </style>

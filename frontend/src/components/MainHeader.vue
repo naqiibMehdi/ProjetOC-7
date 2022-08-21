@@ -4,7 +4,6 @@
 
     <img src="../assets/icon-left-font-monochrome-black.svg" alt="" class="header-logo">
     
-
     <nav class="listLinks">
       <ul>
         <li><router-link to="/blog">Accueil</router-link></li>
@@ -100,5 +99,11 @@ export default {
 
 .mainHeader a:hover::before{
   transform: scaleX(1);
+}
+
+@media all and (max-width: 768px){
+  .mainHeader img{
+    display: none;
+  }
 }
 </style>

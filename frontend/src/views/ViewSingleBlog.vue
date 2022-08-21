@@ -320,4 +320,31 @@ export default {
   cursor: pointer;
 }
 
+@media all and (max-width: 992px){
+  .singleCard{
+    flex-direction: column;
+    gap: 100px
+  }
+
+  .singleCardComment{
+    margin: 0
+  }
+
+ .buttonSingleCard{
+    display: flex;
+    flex-direction: row;
+    width: 650px;
+    justify-content: space-around;
+  }
+}
+
+@media all and (max-width: 768px){
+  .singleCardComment{
+    width: 90%
+  }
+
+  .buttonSingleCard{
+    width: 90%
+  }
+}
 </style>

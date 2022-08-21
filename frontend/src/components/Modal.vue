@@ -93,4 +93,16 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
+
+@media all and (max-width: 992px){
+  .formModal{
+    width: 50%;
+  }
+}
+@media all and (max-width: 768px){
+  .formModal{
+    width: 90%;
+    left: 48%;
+  }
+}
 </style>

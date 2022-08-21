@@ -99,27 +99,27 @@ export default {
 
 
     postCard() {
-      this.$store.dispatch("createBlog", this.dataForm())
+      // this.$store.dispatch("createBlog", this.dataForm())
 
-      // axios.post("http://localhost:3000/api/blogs",
-      //     this.dataForm(),
-      //     {
-      //       withCredentials: true, 
-      //       headers: {"Content-Type": "multipart/form-data"}
-      //     })
-      //   .then(() => {
-      //     this.targetFile = ""
-      //     this.error = ""
-      //     this.description = ""
-      //     this.open = false
-      //     this.listCards = []
-      //     return this.getCards()
-      //     // this.test()
+      axios.post("http://localhost:3000/api/blogs",
+          this.dataForm(),
+          {
+            withCredentials: true, 
+            headers: {"Content-Type": "multipart/form-data"}
+          })
+        .then(() => {
+          this.targetFile = ""
+          this.error = ""
+          this.description = ""
+          this.open = false
+          this.listCards = []
+          return this.getCards()
+          // this.test()
           
-      //   })
-      //   .catch((err) => {
-      //     this.error = err.response.data
-      //   });
+        })
+        .catch((err) => {
+          this.error = err.response.data
+        });
     },
 
     previewFile() {
@@ -160,5 +160,13 @@ export default {
 .blog {
   width: 700px;
   margin: 25px auto;
+}
+
+@media all and (max-width: 768px){
+  .blog{
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 </style>

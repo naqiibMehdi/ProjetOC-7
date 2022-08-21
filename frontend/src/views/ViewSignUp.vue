@@ -94,7 +94,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 35%;
+  width: 40%;
   margin: 100px auto;
   padding: 50px;
   border-radius: 5px;
@@ -116,5 +116,16 @@ export default {
   display: flex;
   flex-direction: column;
   gap:5px
+}
+
+@media all and (max-width: 992px){
+  .form{
+    width: 60%;
+  }
+}
+@media all and (max-width: 768px){
+  .form{
+    width: 90%;
+  }
 }
 </style>

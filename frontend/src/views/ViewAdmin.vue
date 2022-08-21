@@ -13,7 +13,7 @@
         <template #content>
           <div class="dataUser">
           <p><span>Email:</span> <span class="emailUser">{{ user.email }}</span></p>
-          <p><span>Status:</span> <span :style="{color: user.isadmin ? '#5e8f32' : '#fd2d01', fontWeight: 'bold'}">{{ user.isadmin ? "Administrateur" : "Utilisateur" }}</span></p>
+          <p><span>Status:</span> <span :style="{color: user.isadmin ? '#5e8f32' : '#fd2d01', fontWeight: 'bold'}">{{ user.isadmin ? 'Administrateur' : 'Utilsateur' }}</span></p>
           </div>
         </template>
         <template #footer>
@@ -38,7 +38,7 @@ export default {
   components: { MainHeader, Button, Dialog, Card },
   data() {
     return {
-      users: []
+      users: [],
     }
   },
   mounted(){
@@ -65,7 +65,7 @@ export default {
       const userId = id
 
       this.$confirm.require({
-        message: "Voulez-vous changer le statut de cet utilsateur ?",
+        message: "Voulez-vous changer le statut de cet utilisateur ?",
         header: "Gestion des comptes",
         acceptClass: "p-button-succes",
         accept: () => {
@@ -119,10 +119,10 @@ h1{
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  gap: 10px
 }
 
 .p-card{
-  width: 30%;
   margin-bottom: 20px;
 }
 

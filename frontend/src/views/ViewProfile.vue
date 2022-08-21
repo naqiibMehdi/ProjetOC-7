@@ -7,7 +7,7 @@
     <div class="userProfile">
       <div class="picture">
         <img :src="imageProfile" alt="image du profile">
-        <i class="fa-solid fa-camera" @click="$refs.myImage.click()"></i>
+        <i class="pi pi-camera" @click="$refs.myImage.click()"></i>
       </div>
       <p class="name">{{ name }} {{ firstname }}</p>
       <p class="email"><span class="info">Email:</span> {{ email }}</p>
@@ -21,6 +21,7 @@
 import MainHeader from "@/components/MainHeader.vue"
 import Button from "primevue/button"
 import Dialog from "@/components/Dialog.vue"
+import "primeicons/primeicons.css"
 import axios from "axios"
 
 export default {

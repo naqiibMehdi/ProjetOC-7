@@ -60,4 +60,10 @@ export default {
 .header-links a:focus::before{
   transform: scaleX(1);
 }
+
+@media all and (max-width: 768px){
+  .header-form img{
+    display: none;
+  }
+}
 </style>
