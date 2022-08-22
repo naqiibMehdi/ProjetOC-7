@@ -12,7 +12,7 @@
             id="description"
             v-model="description"
           />
-          <span v-show="$store.state.errorBlog" class="p-error">{{ $store.state.errorBlog }}</span>
+          <span v-show="error" class="p-error">{{ error }}</span>
 
           <input type="file" name="image" id="image" ref="myImage" hidden @change="previewFile"/>
 
@@ -66,8 +66,14 @@ export default {
     };
   },
 
-  async created() {
+  created() {
     this.$store.dispatch("setBlogs")
+    .catch(err => {
+      const code = [401, 403]
+          if(code.includes(err.response.status)){
+            this.$router.push("/")
+          }
+      })
     },
 
   computed: {
@@ -86,7 +92,14 @@ export default {
     },
 
       postCard() {
-      this.$store.dispatch("createBlog", {payload: this.dataForm(), open: this.open = false, desc: this.description})
+      this.$store.dispatch("createBlog", this.dataForm())
+      .then(() => {
+        this.error = ""
+        this.description = ""
+        this.targetFile = ""
+        this.open = false
+      })
+      .catch(() => this.error = this.$store.state.errorBlog)
       
     
         

@@ -7,14 +7,26 @@ const store = createStore({
     return {
       blogs: [],
       errorBlog: "",
-      open: false
+      errorsSignUp: {}
     }
   },
 
   actions: {
+    //signUp
+    signUp({commit}, dataPost){
+      return axios.post("http://localhost:3000/api/auth/signup", dataPost)
+      .then((res) => {
+        return res
+      })
+      .catch(err => { 
+        commit("errorsSignUp", err.response.data)
+        return Promise.reject(err)
+      })
+    },
+
     //get all blogs
     setBlogs({commit}){
-      axios.get("http://localhost:3000/api/blogs", {
+      return axios.get("http://localhost:3000/api/blogs", {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         })
@@ -22,36 +34,34 @@ const store = createStore({
           commit("setBlogs", res.data)
         })
         .catch((err) => {
-          console.log(err)
-          const code = [401, 403]
-          if(code.includes(err.response.status)){
-            this.$router.push("/")
-          }
+          return Promise.reject(err)
         });
       },
 
       //create one blog
-      createBlog({commit, state}, {payload, open, desc}){
-        axios.post("http://localhost:3000/api/blogs",
+      createBlog({commit}, payload){
+        return axios.post("http://localhost:3000/api/blogs",
           payload,
           {
             withCredentials: true, 
             headers: {"Content-Type": "multipart/form-data"}
           })
         .then((res) => {
-          open
-          desc = ""
-          state.errorBlog = ""
-          commit("createBlog", res.data) 
+          commit("createBlog", res.data)
         })
         .catch(err => {
           commit("errorBlog", err.response.data);
+          return Promise.reject(err)
         })
         
       }
     },
 
   mutations: {
+    errorsSignUp(state, errors){
+      state.errorsSignUp = errors
+    },
+
     setBlogs(state, blogs){
       state.blogs = blogs
     },
