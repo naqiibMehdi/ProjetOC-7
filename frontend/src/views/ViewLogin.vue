@@ -36,7 +36,6 @@
 
 <script>
 import Header from "@/components/Header.vue";
-import axios from "axios"
 import InputText from "primevue/inputtext"
 import Button from "primevue/button"
 
@@ -53,12 +52,15 @@ export default {
   methods: {
 
     fetchLogin() {
-      axios.post("http://localhost:3000/api/auth/login", {
-        email: this.email,
-        password: this.password,
-      }, {withCredentials: true})
-      .then(response => this.$router.push("/blog"))
-      .catch(err => (this.errors = err.response.data))
+
+      const data = {
+       email: this.email,
+       password: this.password,
+     }
+
+      this.$store.dispatch("login", data)
+      .then(() => this.$router.push("/blog"))
+      .catch(() => this.errors = this.$store.state.errorLogin)
     }
   },
 };

@@ -18,8 +18,15 @@ exports.createComment = async (req, res) => {
         userId: req.user
       })
 
-      await comment.save()
-      res.status(201).json({message: "Commentaire ajouté !"})
+      const lastCreateComment = await comment.save()
+
+      const lastComment = await Comment.findOne({
+        where: {id: lastCreateComment.id},
+        include: {model: User, attributes: ["name", "firstname"]},
+      })
+
+      res.status(201).json(lastComment)
+
     }else{
       throw Error("Article inexistant")
     }

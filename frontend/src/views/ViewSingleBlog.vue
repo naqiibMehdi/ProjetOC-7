@@ -51,7 +51,7 @@
         />
         <form method="POST">
           <Textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.alt="createComment" />
-          <span v-show="errorComment" class="p-error">{{ errorComment }}</span>
+          <span v-show="errorComment" class="p-error">{{ errorComment.message }}</span>
           <div class="footerForm">
             <small>Appuyez sur touche <span class="alt">Alt + Entrée</span> pour valider</small>
             <Button class="p-button-raised" label="Commenter" @click="createComment"/>
@@ -81,7 +81,6 @@ export default {
   data (){
     return {
       card: [],
-      listComments: [],
       isOwner: null,
       isAdmin: null,
       comment: "",
@@ -95,10 +94,15 @@ export default {
     }
   },
 
-  async mounted(){
+  async created(){
     (this.getOneUser());
     (this.getCard()); 
     (this.getComment());
+  },
+  computed: {
+    listComments(){
+      return this.$store.getters.getComments
+    }
   },
 
   methods: {
@@ -194,35 +198,21 @@ export default {
 
     //section about comments data
     getComment() {
-      axios.get(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, 
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          for(let comment of res.data){
-            this.listComments.push(comment)
-          }
-        })
-        .catch((err) => console.log(err));
+      this.$store.dispatch("setComments", this.$route.params.id)
     },
 
     createComment(e) {
+
+      const data = {description: this.comment}
+
       if((e.key === "Enter" && e.type === "keyup") || e.type === "click"){
 
-        axios.post(`http://localhost:3000/api/blogs/${this.$route.params.id}/comment`, 
-        {
-          description: this.comment,
-        }
-        , {withCredentials: true})
-
-        .then((res) => {
-          this.listComments = []
+        this.$store.dispatch("createComment", {idBlog: this.$route.params.id, description: data})
+        .then(() => {
+          this.errorComment = ""
           this.comment = ""
-          this.getComment()
         })
-        .catch(err => this.errorComment = err.response.data.message)
-
+        .catch(() => this.errorComment = this.$store.state.errorComment)
       }
     },
 

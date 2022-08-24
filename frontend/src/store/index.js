@@ -6,20 +6,41 @@ const store = createStore({
   state() {
     return {
       blogs: [],
+      comments: [],
       errorBlog: "",
-      errorsSignUp: {}
+      errorsSignUp: {},
+      errorLogin: "",
+      errorComment: ""
     }
   },
 
   actions: {
     //signUp
     signUp({commit}, dataPost){
-      return axios.post("http://localhost:3000/api/auth/signup", dataPost)
+      return axios.post("http://localhost:3000/api/auth/signup", dataPost, 
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
       .then((res) => {
         return res
       })
       .catch(err => { 
         commit("errorsSignUp", err.response.data)
+        return Promise.reject(err)
+      })
+    },
+
+    //login
+    login({commit}, data){
+      return axios.post("http://localhost:3000/api/auth/login", data, 
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
+      .then(res => res)
+      .catch(err => {
+        commit("errorLogin", err.response.data)
         return Promise.reject(err)
       })
     },
@@ -53,7 +74,32 @@ const store = createStore({
           commit("errorBlog", err.response.data);
           return Promise.reject(err)
         })
-        
+      },
+
+      //get all comments
+      setComments({commit}, idBlog){
+        return axios.get(`http://localhost:3000/api/blogs/${idBlog}/comment`, 
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then(res => {
+          commit("setComments", res.data)
+        })
+      },
+
+      createComment({commit}, {idBlog, description}){
+        return axios.post(`http://localhost:3000/api/blogs/${idBlog}/comment`, description,
+        {
+          withCredentials: true
+        })
+        .then(res => {
+          commit("createComment", res.data)
+        })
+        .catch(err => {
+          commit("errorComment", err.response.data)
+          return Promise.reject(err)
+        })
       }
     },
 
@@ -62,6 +108,10 @@ const store = createStore({
       state.errorsSignUp = errors
     },
 
+    errorLogin(state, error){
+      state.errorLogin = error
+    },
+    //section of blogs
     setBlogs(state, blogs){
       state.blogs = blogs
     },
@@ -69,14 +119,32 @@ const store = createStore({
     createBlog(state, blog){
       state.blogs.unshift(blog)
     },
+
     errorBlog(state, error){
       state.errorBlog = error
+    },
+
+    //section of comments
+    setComments(state, comments){
+      state.comments = comments
+    },
+
+    createComment(state, comment){
+      state.comments.push(comment)
+    },
+
+    errorComment(state, error){
+      state.errorComment = error
     }
   },
 
   getters: {
     getBlogs(state){
       return state.blogs
+    },
+
+    getComments(state){
+      return state.comments
     }
   }
 })
