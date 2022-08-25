@@ -100,6 +100,32 @@ const store = createStore({
           commit("errorComment", err.response.data)
           return Promise.reject(err)
         })
+      },
+
+      updateComment({ commit }, {id, data}){
+        return axios.put(`http://localhost:3000/api/comment/${id}`, data,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then(() => {
+          commit("updateComment", {id, data})
+        })
+        .catch((err) => {
+          commit("errorComment", err.response.data)
+          return Promise.reject(err)
+        });
+      },
+
+      deleteComment({ commit }, id){
+        return axios.delete(`http://localhost:3000/api/comment/${id}`, 
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          })
+          .then(() => {
+            commit("deleteComment", id)
+          })
       }
     },
 
@@ -131,6 +157,16 @@ const store = createStore({
 
     createComment(state, comment){
       state.comments.push(comment)
+    },
+
+    updateComment(state, {id, data}){
+      const comment = state.comments.find(comm => comm.id === id)
+      comment.description = data.description
+    },
+
+    deleteComment(state, id){
+      const comments = state.comments.filter(comment => comment.id !== id)
+      state.comments = comments
     },
 
     errorComment(state, error){

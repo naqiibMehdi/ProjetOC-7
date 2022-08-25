@@ -1,5 +1,5 @@
 <template>
-    <ConfirmDialog></ConfirmDialog>
+     <ConfirmDialog></ConfirmDialog>
 </template>
 
 <script>

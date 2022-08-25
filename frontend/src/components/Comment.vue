@@ -4,12 +4,12 @@
     <p class="description">{{ description }}</p>
     <div class="listButtonsComment">
       <Button text="Modifier" bgdclr="transparent" color="rgba(78, 81, 102)" v-if="userid === userIdLocal() || isAdmin" @click="updateComment(id)"/>
-      <Button text="Supprimer" bgdclr="transparent" color="rgba(78, 81, 102)" v-if="userid === userIdLocal() || isAdmin" @click="deleteComment(id)"/>
+      <Button text="Supprimer" bgdclr="transparent" color="rgba(78, 81, 102)" v-if="userid === userIdLocal() || isAdmin" @click="deleteComm(id)"/>
     </div>
   </div>
   <div :data-id="id" class="validateComment" v-else>
     <Textarea name="description" id="description" cols="30" rows="3" v-model="comment" />
-    <ButtonPrime label="Valider" class="p-button-raised p-button-success" @click="validateComment($event, id)"/>
+    <ButtonPrime label="Valider" class="p-button-raised p-button-success" @click="validateComment(comment, id)"/>
   </div>
 </template>
 
@@ -31,10 +31,9 @@ export default {
     }
   },
   mounted(){
-    this.getUserData()
+    this.getUserData();
   },
   methods: {
-
     userIdLocal(){
       return parseInt(document.cookie.split("=")[1])
     },
@@ -51,17 +50,21 @@ export default {
         .catch((err) => console.log(err))
     },
 
-    deleteComment(id){
+    deleteComm(id){
       this.$emit("deleted", id)
     },
 
-    validateComment(id, $event){
-      this.$emit("validated", id, $event)
+    validateComment(comment, id){
+      
+      const data = {description: comment}
+
+      this.$store.dispatch("updateComment", {id, data})
+      .then(() => this.show = true)
+      
     },
 
     updateComment(id){
-      this.show = false
-
+       this.show = false
       axios.get(`http://localhost:3000/api/comment/${id}`,
         {
           headers: { "Content-Type": "application/json" },
@@ -71,6 +74,7 @@ export default {
           this.comment = res.data.description
         })
         .catch((err) => console.log(err));
+      
     }
   }
 }

@@ -47,7 +47,6 @@
           :description="comment.description"
           :userid="comment.userId"
           @deleted="commentDeleted"
-          @validated="commentValidated"
         />
         <form method="POST">
           <Textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.alt="createComment" />
@@ -89,8 +88,7 @@ export default {
       imageUrl: "",
       open: false,
       errorComment: "",
-      error: ""
-      
+      error: "",
     }
   },
 
@@ -216,23 +214,6 @@ export default {
       }
     },
 
-    commentValidated(comm, id) {
-    const comment = comm.target.parentElement.previousSibling.value
-
-      axios.put(`http://localhost:3000/api/comment/${id}`,
-        {description: comment},
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          this.listComments = []
-          this.comment = ""
-          this.getComment()
-        })
-        .catch((err) => console.log(err));
-    },
-
     commentDeleted(idComment) {
       //appel au composant
       this.$confirm.require({
@@ -240,17 +221,8 @@ export default {
         header: "Suppression",
         acceptClass: "p-button-danger",
         accept: () => {
-          axios.delete(`http://localhost:3000/api/comment/${idComment}`, 
-            {
-              headers: { "Content-Type": "application/json" },
-              withCredentials: true,
-            })
-            .then((res) => {
-              this.listComments = []
-              this.comment = ""
-              this.getComment()
-            })
-            .catch((err) => console.log(err));
+
+          this.$store.dispatch("deleteComment", idComment)
         },
         reject: () => {
           return
