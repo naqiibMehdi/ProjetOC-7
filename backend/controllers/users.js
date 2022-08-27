@@ -101,7 +101,7 @@ exports.updateImageUser = async (req, res) => {
           imageProfile: `${req.protocol}://${req.get("host")}/images/profile/${req.file.filename}`
         }, {where: {id: req.user}})
 
-        res.status(200).json({message: "image du profil mis à jour"})
+        res.status(200).json({imageProfile: `${req.protocol}://${req.get("host")}/images/profile/${req.file.filename}`})
 
       }else{
 
@@ -110,7 +110,7 @@ exports.updateImageUser = async (req, res) => {
             imageProfile: `${req.protocol}://${req.get("host")}/images/profile/${req.file.filename}`
           }, {where: {id: req.user}})
 
-          res.status(200).json({message: "image du profil mis à jour"})
+          res.status(200).json({imageProfile: `${req.protocol}://${req.get("host")}/images/profile/${req.file.filename}`})
         })
       }
     }else{

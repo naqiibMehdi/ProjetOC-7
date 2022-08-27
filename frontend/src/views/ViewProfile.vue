@@ -1,18 +1,18 @@
 <template>
   <Dialog :deleteDialog="deleteUser" />
   <MainHeader />
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
       <input type="file" name="imageProfile" id="imageProfile" ref="myImage" accept="image/jpeg, image/png, image/gif" hidden @change="updateImageUser">
     </form>
     <div class="userProfile">
       <div class="picture">
-        <img :src="imageProfile" alt="image du profile">
+        <img :src="user.imageProfile" alt="image du profile">
         <i class="pi pi-camera" @click="$refs.myImage.click()"></i>
       </div>
-      <p class="name">{{ name }} {{ firstname }}</p>
-      <p class="email"><span class="info">Email:</span> {{ email }}</p>
-      <p class="createDate"><span class="info">Crée le:</span> {{ dateFormat(createdat) }}</p>
-      <Button icon="pi pi-times" class="p-button-raised p-button-danger" label="Supprimer mon compte" @click="deleteUser"/>
+      <p class="name">{{ user.name }} {{ user.firstname }}</p>
+      <p class="email"><span class="info">Email:</span> {{ user.email }}</p>
+      <p class="createDate"><span class="info">Crée le:</span> {{ dateFormat(user.createdat) }}</p>
+      <Button class="p-button-raised p-button-danger" label="Supprimer mon compte" @click="deleteUser"/>
       <span class="error" v-if="errorFile">{{ errorFile }}</span>
     </div>
 </template>
@@ -21,7 +21,6 @@
 import MainHeader from "@/components/MainHeader.vue"
 import Button from "primevue/button"
 import Dialog from "@/components/Dialog.vue"
-import "primeicons/primeicons.css"
 import axios from "axios"
 
 export default {
@@ -41,25 +40,23 @@ export default {
   mounted(){
     this.getOneUser()
   },
+  computed:{
+    user(){
+      return this.$store.getters.getUser
+    }
+  },
 
-  methods: {
+  methods: {  
     getOneUser() {
-      axios.get("http://localhost:3000/api/auth/user/profile",
-        {withCredentials: true}
-      )
-      .then((res) => {
-        this.name = res.data.name
-        this.firstname = res.data.firstname
-        this.imageProfile = res.data.imageProfile
-        this.email = res.data.email
-        this.createdat = res.data.createdat
-      })
-      .catch(err => {
-          const code = [401, 403]
+      this.$store.dispatch("setUserProfile")
+      .then((res) => res)
+      .catch((err) => {
+        const code = [401, 403]
           if(code.includes(err.response.status)){
-            this.$router.push("/")
+          this.$router.push("/")
           }
       })
+
     },
 
     updateImageUser() {
@@ -67,16 +64,11 @@ export default {
       const form = new FormData()
       form.append("imageProfile", imageUser)
 
-      axios.put("http://localhost:3000/api/auth/user/profile/image", form,
-        {
-          withCredentials: true,
-          headers: {"Content-Type": "multipart/form-data"}
-        })
-      .then((res) => {
+      this.$store.dispatch("updateImageProfile", form)
+      .then(() => {
         this.errorFile = ""
-        this.getOneUser()
       })
-      .catch(err => this.errorFile = "Extensions acceptées: jpg | png")
+      .catch(() => this.errorFile = "Extensions acceptées: jpg | png")
     },
 
     deleteUser() {
@@ -84,22 +76,16 @@ export default {
         message: "Etes-vous sûr de vouloir supprimer votre compte ?",
         header: "Suppression",
         acceptClass: 'p-button-danger',
-        icon: "pi pi-info-circle",
         accept: () => {
             //callback to execute when user confirms the action
-          axios.delete("http://localhost:3000/api/auth/user/profile", {withCredentials: true})
+          this.$store.dispatch("deleteUserProfile")
           .then(() =>  this.$router.push("/"))
-          .catch(err => console.log(err))
           },
           reject: () => {
             //callback to execute when user rejects the action
             return
           },
       });
-
-      
-      
-      
     },
 
     dateFormat(date){

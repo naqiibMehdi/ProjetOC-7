@@ -27,17 +27,16 @@
   </Modal>
 
   <MainHeader />
-    <div v-if="card.length === 0">
-      <p>Article inexistant !</p>
-    </div>
-    <div class="singleCard" v-else>
+    <div class="singleCard">
       <div class="singleCardComment">
+
         <SingleCard
-          :name="card[0].user.name"
-          :firstname="card[0].user.firstname"
-          :description="card[0].description"
-          :imageUrl="card[0].imageUrl"
+          :name="oneCard.name"
+          :firstname="oneCard.firstname"
+          :description="oneCard.description"
+          :imageUrl="oneCard.imageUrl"
         />
+
         <Comment
           v-for="comment in listComments" 
           :key="comment.id"
@@ -48,6 +47,7 @@
           :userid="comment.userId"
           @deleted="commentDeleted"
         />
+
         <form method="POST">
           <Textarea name="description" id="description" placeholder="Ecrire un commentaire" cols="30" rows="1" v-model="comment" @keyup.alt="createComment" />
           <span v-show="errorComment" class="p-error">{{ errorComment.message }}</span>
@@ -92,12 +92,17 @@ export default {
     }
   },
 
-  async created(){
-    (this.getOneUser());
+  created(){
     (this.getCard()); 
-    (this.getComment());
+    (this.getOneUser());
+    (this.getComments());
   },
+
   computed: {
+    oneCard(){
+      return this.$store.getters.getOneBlog
+    },
+
     listComments(){
       return this.$store.getters.getComments
     }
@@ -136,38 +141,23 @@ export default {
 
     //section about card data
     getCard() {
-      axios.get(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          this.card.push(res.data)
-          this.isOwner = res.data.userId
-          this.descriptionCard = res.data.description
-          this.targetFile = res.data.imageUrl
-        })
-        .catch((err) => console.log(err));
+      this.$store.dispatch("setOneBlog", this.$route.params.id)
+      .then(() => {
+        this.isOwner = this.oneCard.userId
+        this.descriptionCard = this.oneCard.description
+        this.targetFile = this.oneCard.imageUrl
+      })
     },
 
     updateCard() {
+
       const listData = new FormData();
       listData.append("description", this.descriptionCard);
       listData.append("imageUrl", this.previewFile());
 
-      axios
-        .put(
-          `http://localhost:3000/api/blogs/${this.$route.params.id}`,
-          listData,
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        )
-        .then(() => {
-          this.$router.push("/blog");
-        })
-        .catch((err) => this.error = err.response.data);
+      this.$store.dispatch("updateOneBlog", {id: this.$route.params.id, datas: listData})
+      .then(() => this.$router.push("/blog"))
+      .catch(() => this.error = this.$store.state.errorBlog)
     },
 
     deleteCard() {
@@ -177,15 +167,8 @@ export default {
         acceptClass: "p-button-danger",
         accept: () => {
 
-          axios.delete(`http://localhost:3000/api/blogs/${this.$route.params.id}`, 
-            {
-              headers: { "Content-Type": "application/json" },
-              withCredentials: true,
-            })
-            .then(() => {
-              this.$router.push("/blog")
-            })
-            .catch((err) => console.log(err));
+          this.$store.dispatch("deleteOneBlog", this.$route.params.id)
+          .then(() => this.$router.push("/blog"))
         },
         reject: () => {
           return
@@ -195,7 +178,7 @@ export default {
     },
 
     //section about comments data
-    getComment() {
+    getComments() {
       this.$store.dispatch("setComments", this.$route.params.id)
     },
 
