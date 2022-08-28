@@ -268,7 +268,7 @@ export default {
 @media all and (max-width: 992px){
   .singleCard{
     flex-direction: column;
-    gap: 100px
+    gap: 50px
   }
 
   .singleCardComment{

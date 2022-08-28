@@ -5,13 +5,14 @@
     <img src="../assets/icon-left-font-monochrome-black.svg" alt="" class="header-logo">
     
     <nav class="listLinks">
-      <ul>
+      <ul class="labelMenu">
         <li><router-link to="/blog">Accueil</router-link></li>
         <li @click="handleModal" v-if="$route.name === 'Blog' ? true : false"><a>Poster un article</a></li>
         <li v-show="isAdmin"><router-link to="/admin">Admin</router-link></li>
         <li><router-link to="/profile">Profile</router-link></li>
         <li><router-link to="/logout">Déconnexion</router-link></li>
       </ul>
+      <IconMenu width="30px" height="30px" fill="#FD2D01" :isAdmin="isAdmin" :handleModal="handleModal" />
     </nav>
   </header>
 </template>
@@ -20,10 +21,11 @@
 import axios from "axios"
 import Button from "primevue/button"
 import Modal from "@/components/Modal.vue"
+import IconMenu from "@/components/IconMenu.vue"
 
 export default {
   name: "MainHeader",
-  components: {Button, Modal},
+  components: {Button, Modal, IconMenu},
   data() {
     return {
       isAdmin: false,
@@ -34,11 +36,16 @@ export default {
   },
   methods: {
     getOneUser() {
-      axios.get("http://localhost:3000/api/auth/user/profile", {withCredentials: true})
-      .then(res => {
-        this.isAdmin = res.data.isadmin
-      })
-      .catch(err => console.log(err))
+
+      this.$store
+        .dispatch("setUserProfile")
+        .then(() => this.isAdmin = this.$store.state.user.isadmin)
+        .catch((err) => {
+          const code = [401, 403];
+          if (code.includes(err.response.status)) {
+            this.$router.push("/");
+          }
+        });
     },
 
     handleModal() {
@@ -49,6 +56,10 @@ export default {
 </script>
 
 <style>
+.mainHeader .iconMenu{
+  display: none
+}
+
 .mainHeader{
   position: fixed;
   top: 0;
@@ -102,6 +113,15 @@ export default {
 }
 
 @media all and (max-width: 768px){
+
+  .mainHeader .iconMenu{
+     display: flex
+  }
+
+  .mainHeader .labelMenu{
+     display: none
+  }
+
   .mainHeader img{
     display: none;
   }
