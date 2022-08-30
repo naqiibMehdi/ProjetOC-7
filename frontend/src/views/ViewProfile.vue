@@ -42,7 +42,6 @@
 import MainHeader from "@/components/MainHeader.vue";
 import Button from "primevue/button";
 import Dialog from "@/components/Dialog.vue";
-import axios from "axios";
 
 export default {
   name: "Profile",

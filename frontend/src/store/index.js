@@ -9,14 +9,41 @@ const store = createStore({
       oneBlog: {},
       blogs: [],
       comments: [],
+      listUsersAdmin: [],
       errorBlog: "",
       errorsSignUp: {},
       errorLogin: "",
-      errorComment: ""
+      errorComment: "",
+      errorsUpdatePwd: {}
     }
   },
 
   actions: {
+    //user managed by admin
+    setAllUserForAdmin({commit}){
+      return axios.get("http://localhost:3000/api/auth/admin/user", {withCredentials: true})
+      .then((res) => {
+        commit("setAllUserForAdmin", res.data)
+      })
+      .catch(err => Promise.reject(err))
+    },
+
+    updateStatusUser({commit}, userId){
+      return axios.put(`http://localhost:3000/api/auth/admin/user/${userId}`, {}, {withCredentials: true})
+      .then(() => {
+        commit("updateStatusUser", userId)
+      })
+      .catch(err => Promise.reject(err))
+    },
+
+    deleteUserLIstAdmin({commit}, userId){
+      return axios.delete(`http://localhost:3000/api/auth/admin/user/${userId}`, {withCredentials: true})
+      .then(() => {
+        commit("deleteUserLIstAdmin", userId)
+      })
+      .catch(err => Promise.reject(err))
+    },
+
     //get only one user
     setUserProfile({commit}){
       return axios.get("http://localhost:3000/api/auth/user/profile",
@@ -71,6 +98,20 @@ const store = createStore({
       .then(res => res)
       .catch(err => {
         commit("errorLogin", err.response.data)
+        return Promise.reject(err)
+      })
+    },
+
+    //update forget password
+    errorsForgetPwd({commit}, data){
+      return axios.post("http://localhost:3000/api/auth/updatepassword", data, 
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
+      .then(res => res)
+      .catch(err => {
+        commit("errorsForgetPwd", err.response.data)
         return Promise.reject(err)
       })
     },
@@ -194,6 +235,26 @@ const store = createStore({
     },
 
   mutations: {
+    // errors of forget pasword
+    errorsForgetPwd(state, errors){
+      state.errorsUpdatePwd = errors
+    },
+
+    //function for Admin part
+    setAllUserForAdmin(state, data){
+      state.listUsersAdmin = data
+    },
+
+    updateStatusUser(state, idUser){
+      const user = state.listUsersAdmin.find(user => user.id === idUser)
+      user.isadmin = !user.isadmin
+    },
+
+    deleteUserLIstAdmin(state, userId){
+      const newListUsers = state.listUsersAdmin.filter(user => user.id !== userId)
+      state.listUsersAdmin = newListUsers
+    },
+
     oneUser(state, data){
       state.user = data
     },
@@ -255,6 +316,10 @@ const store = createStore({
   },
 
   getters: {
+    getUsersForAdmin(state){
+      return state.listUsersAdmin
+    },
+
     getUser(state){
       return state.user
     },

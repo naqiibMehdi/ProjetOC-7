@@ -3,7 +3,7 @@
   <MainHeader />
   <h1>Liste des utilisateurs</h1>
     <div class="userList">
-      <Card v-for="user in users" :key="user.id">
+      <Card v-for="user in getAllUsers" :key="user.id">
         <template #header>
           <img :src="user.imageProfile" alt="image du profile">
         </template>
@@ -41,18 +41,20 @@ export default {
       users: [],
     }
   },
-  mounted(){
-    this.getAllUsersForAdmin()
+  created(){
+    this.AllUsersForAdmin()
+  },
+
+  computed: {
+    getAllUsers(){
+      return this.$store.getters.getUsersForAdmin
+    }
   },
   methods: {
 
-    getAllUsersForAdmin() {
-      axios.get("http://localhost:3000/api/auth/admin/user", {withCredentials: true})
-      .then(res => {
-        for(let user of res.data){
-          this.users.push(user)
-        }
-      })
+    AllUsersForAdmin() {
+      this.$store.dispatch("setAllUserForAdmin")
+      .then(res => res)
       .catch(err => {
         const code = [401, 403]
           if(code.includes(err.response.status)){
@@ -62,18 +64,13 @@ export default {
     },
 
     handleStatus(id) {
-      const userId = id
-
       this.$confirm.require({
         message: "Voulez-vous changer le statut de cet utilisateur ?",
         header: "Gestion des comptes",
         acceptClass: "p-button-succes",
         accept: () => {
-          axios.put(`http://localhost:3000/api/auth/admin/user/${userId}`, {}, {withCredentials: true})
-          .then(res => {
-            this.users = []
-            this.getAllUsersForAdmin()
-          })
+          this.$store.dispatch("updateStatusUser", id)
+          .then(res => res)
           .catch(err => console.log(err))
         },
         reject: () => {
@@ -84,18 +81,13 @@ export default {
     },
 
     deleteUserAccount(id) {
-      const userId = id
-
       this.$confirm.require({
         message: "Etes-vous sûr de vouloir supprimer le compte de cet utilsateur ?",
         header: "Gestion des comptes",
         acceptClass: "p-button-danger",
         accept: () => {
-          axios.delete(`http://localhost:3000/api/auth/admin/user/${userId}`, {withCredentials: true})
-          .then(res => {
-            this.users = []
-            this.getAllUsersForAdmin()
-          })
+          this.$store.dispatch("deleteUserLIstAdmin", id)
+          .then(res => res)
           .catch(err => console.log(err))
         },
         reject: () => {

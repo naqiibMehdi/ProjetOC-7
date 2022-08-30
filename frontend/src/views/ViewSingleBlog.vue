@@ -72,7 +72,6 @@ import Button from "primevue/button"
 import Textarea from "primevue/textarea"
 import Modal from "@/components/Modal.vue"
 import Dialog from "@/components/Dialog.vue"
-import axios from "axios"
 
 export default {
   name: "SingleBlog",
@@ -130,12 +129,8 @@ export default {
 
     //get one User
     getOneUser() {
-      axios.get(`http://localhost:3000/api/auth/user/profile`, 
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then(res => this.isAdmin = res.data.isadmin)
+      this.$store.dispatch("setUserProfile")
+        .then(res => this.isAdmin = this.$store.state.user.isadmin)
         .catch(err => console.log(err))
     },
 

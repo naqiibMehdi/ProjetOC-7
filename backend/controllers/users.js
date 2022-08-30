@@ -82,6 +82,46 @@ exports.login = async (req, res) => {
     })
 }
 
+exports.updatePassword = async (req, res) => {
+  try{
+    const {name, email, password} = req.body
+    const errors = {}
+    const user = await User.findOne({
+      where: {[Op.or]: [{email: req.body.email}, {name: req.body.name}]}
+    })
+
+    if(!name && !email && !password){
+      return res.status(400).json({message: "vous devez saisir tous les champs"})
+    }
+
+    if(!user || name !== user.name){
+      errors["name"] = "ce nom d'utilsateur n'existe pas"
+    }
+
+    if(!user || email !== user.email){
+      errors["email"] = "cet email n'existe pas"
+    }
+
+    if(!password || !checkPwd().validate(password)){
+      errors["password"] = "Critère du Mot de passe: 1 minuscule, 1 majuscule, 1 chiffre, 8 caractères minimum"
+    }
+
+    if(!errors.name && !errors.email && !errors.password){
+
+      const hashPwd = await bcrypt.hash(password, 10)
+      await User.update( {password: hashPwd}, {where: {email: user.email}})
+      return res.status(200).json({message: "mise à jour du mot de passe avec succès"})
+
+    }else{
+      throw errors
+    }
+  }
+  catch(err){
+    res.status(400).json(err)
+  }
+
+}
+
 exports.logout = (req, res) => {
   res.cookie("jwt", "", {maxAge: 1})
   res.cookie("user", '', {maxAge: 1})

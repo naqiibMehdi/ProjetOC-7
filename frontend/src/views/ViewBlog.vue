@@ -50,7 +50,6 @@ import MainHeader from "@/components/MainHeader.vue";
 import Button from "primevue/button";
 import Textarea from "primevue/textarea";
 import Modal from "@/components/Modal.vue"
-import axios from "axios";
 
 export default {
   name: "Blog",
@@ -101,29 +100,6 @@ export default {
       })
       .catch(() => this.error = this.$store.state.errorBlog)
       
-    
-        
-      
-
-      // axios.post("http://localhost:3000/api/blogs",
-      //     this.dataForm(),
-      //     {
-      //       withCredentials: true, 
-      //       headers: {"Content-Type": "multipart/form-data"}
-      //     })
-      //   .then(() => {
-      //     this.targetFile = ""
-      //     this.error = ""
-      //     this.description = ""
-      //     this.open = false
-      //     this.listCards = []
-      //     return this.getCards()
-      //     // this.test()
-          
-      //   })
-      //   .catch((err) => {
-      //     this.error = err.response.data
-      //   });
     },
 
     previewFile() {

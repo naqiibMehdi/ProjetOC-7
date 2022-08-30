@@ -29,6 +29,10 @@
         <div v-if="errors.message" class="errorConnexion">
           <span class="p-error">{{ errors.message }}</span>
         </div>
+
+        <div class="forgetPwd">
+          <small>Mot de passe oublié: <router-link to="/forgetPassword">Cliquez ici !</router-link></small>
+        </div>
     </form>
   </div>
 
@@ -72,5 +76,18 @@ export default {
   width: 100%;
   text-align: center;
   margin-top: 20px;
+}
+
+.forgetPwd{
+  margin-top: 20px;
+}
+
+.forgetPwd a{
+  color: #FD2D01;
+  text-decoration: none;
+}
+
+.forgetPwd a:hover{
+  text-decoration: underline;
 }
 </style>

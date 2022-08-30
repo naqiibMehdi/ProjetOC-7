@@ -11,6 +11,6 @@ import Store from "@/store/index.js"
 createApp(App)
 .use(Store)
 .use(router)
-.use(PrimeVue)
+.use(PrimeVue, {locale: {accept: "oui", reject: "non"}})
 .use(ConfirmationService)
 .mount('#app')

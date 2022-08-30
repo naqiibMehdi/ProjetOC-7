@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import axios from "axios"
 import Button from "primevue/button"
 import Modal from "@/components/Modal.vue"
 import IconMenu from "@/components/IconMenu.vue"
