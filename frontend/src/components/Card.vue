@@ -36,10 +36,12 @@ export default {
       totalComments: 0
     }
   },
-  async mounted(){
+  created(){
     this.getLikes();
     this.getComment()
   },
+
+
   methods: {
     getLikes(){
       

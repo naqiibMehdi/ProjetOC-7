@@ -9,7 +9,7 @@
           <InputText
             type="text"
             name="name"
-            placeholder="Nom en MAJUSCULE"
+            placeholder="Nom"
             :class="errors.name ? 'p-invalid' : ''"
             v-model="name"
           />

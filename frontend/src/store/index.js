@@ -9,6 +9,7 @@ const store = createStore({
       oneBlog: {},
       blogs: [],
       comments: [],
+      oneComment: {},
       listUsersAdmin: [],
       errorBlog: "",
       errorsSignUp: {},
@@ -104,7 +105,7 @@ const store = createStore({
 
     //update forget password
     errorsForgetPwd({commit}, data){
-      return axios.post("http://localhost:3000/api/auth/updatepassword", data, 
+      return axios.post("http://localhost:3000/api/auth/reset", data, 
       {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
@@ -157,6 +158,7 @@ const store = createStore({
         .then((res) => {
           commit("setOneBlog", res.data)
         })
+        .catch(err => Promise.reject(err))
       },
 
       updateOneBlog({commit}, {id, datas}){
@@ -191,6 +193,18 @@ const store = createStore({
         .then(res => {
           commit("setComments", res.data)
         })
+      },
+
+      setOneComment({commit}, id){
+        return axios.get(`http://localhost:3000/api/comment/${id}`,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then((res) => {
+          commit("setOneComment", res.data)
+        })
+
       },
 
       createComment({commit}, {idBlog, description}){
@@ -294,6 +308,10 @@ const store = createStore({
     //section of comments
     setComments(state, comments){
       state.comments = comments
+    },
+
+    setOneComment(state, data){
+      state.oneComment = data
     },
 
     createComment(state, comment){

@@ -94,7 +94,7 @@ exports.updatePassword = async (req, res) => {
       return res.status(400).json({message: "vous devez saisir tous les champs"})
     }
 
-    if(!user || name !== user.name){
+    if(!user || (name !== user.name && name !== user.name.toLowerCase())){
       errors["name"] = "ce nom d'utilsateur n'existe pas"
     }
 

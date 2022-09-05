@@ -21,15 +21,17 @@
       <div class="imagePreview" v-show="targetFile">
         <img :src="targetFile" alt="image de prévisualisation">
       </div>
-
+      <Button @click="deleteImage" v-show="targetFile" label="Supprimer l'image" class="p-button-raised p-button-danger formModal-button"/>
       <Button type="submit" label="Valider" class="p-button-raised p-button-success formModal-button"/>
     </form>
   </Modal>
 
   <MainHeader />
     <div class="singleCard">
-      <div class="singleCardComment">
 
+      <p v-if="missingArticle" class="missingArticle">{{ missingArticle }} </p>
+
+      <div class="singleCardComment" v-else>
         <SingleCard
           :name="oneCard.name"
           :firstname="oneCard.firstname"
@@ -57,7 +59,7 @@
           </div>
         </form>
     </div>
-    <div class="buttonSingleCard" v-if="isOwner === userIdLocal() || isAdmin">
+    <div class="buttonSingleCard" v-if="(isOwner === userIdLocal() || isAdmin) && !missingArticle">
       <Button class="p-button-raised" label="Modifier l'article" @click="handleModal"/>
       <Button class="p-button-raised p-button-danger" label="Supprimer l'article"  @click="deleteCard"/>
     </div>
@@ -88,6 +90,7 @@ export default {
       open: false,
       errorComment: "",
       error: "",
+      missingArticle: ""
     }
   },
 
@@ -127,6 +130,11 @@ export default {
       }
     },
 
+    deleteImage(){
+      this.targetFile = ""
+      this.imageUrl = ""
+    },
+
     //get one User
     getOneUser() {
       this.$store.dispatch("setUserProfile")
@@ -142,6 +150,7 @@ export default {
         this.descriptionCard = this.oneCard.description
         this.targetFile = this.oneCard.imageUrl
       })
+      .catch(err => this.missingArticle = err.response.data)
     },
 
     updateCard() {
@@ -152,7 +161,13 @@ export default {
 
       this.$store.dispatch("updateOneBlog", {id: this.$route.params.id, datas: listData})
       .then(() => this.$router.push("/blog"))
-      .catch(() => this.error = this.$store.state.errorBlog)
+      .catch((err) => {
+        if(err.response.status === 400){
+          this.error = this.$store.state.errorBlog
+        }else{
+          this.error = "Seule les extensions suivantes sont acceptées: jpg | gif | png"
+        }
+      })
     },
 
     deleteCard() {
@@ -217,6 +232,12 @@ export default {
   display: flex;
   align-items: center;
   margin-top: 110px
+}
+
+.singleCard .missingArticle{
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
 }
 
 .singleCardComment{

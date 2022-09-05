@@ -8,7 +8,7 @@ const multerProfile = require("../middleware/multerProfile")
 route.post("/signup", userCtrl.signup)
 route.post("/login", userCtrl.login)
 route.post("/logout", userCtrl.logout)
-route.post("/updatepassword", userCtrl.updatePassword)
+route.post("/reset", userCtrl.updatePassword)
 
 //section of user path
 route.put("/user/profile/image", auth, multerProfile, userCtrl.updateImageUser)

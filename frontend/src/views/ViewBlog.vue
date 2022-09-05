@@ -22,13 +22,16 @@
             <img :src="targetFile" alt="image de prévisualisation">
           </div>
 
+          <Button @click="deleteImage" v-show="targetFile" label="Supprimer l'image" class="p-button-raised p-button-danger formModal-button"/>
           <Button type="submit" label="Poster" class="p-button-raised p-button-success formModal-button"/>
         </form>
   </Modal>
   
 <MainHeader @open="handleModal"/>
 
-  <div class="blog">
+  <p class="errorArticle" v-if="getCards <= 0">Aucun articles existant !</p>
+
+  <div class="blog" v-else>
     <Card
       v-for="card in getCards"
       :key="card.id"
@@ -98,7 +101,13 @@ export default {
         this.targetFile = ""
         this.open = false
       })
-      .catch(() => this.error = this.$store.state.errorBlog)
+      .catch((err) => {
+        if(err.response.status === 400){
+          this.error = this.$store.state.errorBlog
+        }else{
+          this.error = "Seule les extensions suivantes sont acceptées: jpg | gif | png"
+        }
+      })
       
     },
 
@@ -111,6 +120,11 @@ export default {
         return this.imageUrl = this.$refs.myImage.files[0]
         
       }
+    },
+
+    deleteImage(){
+      this.targetFile = ""
+      this.imageUrl = ""
     },
 
     dateFormat(date){
@@ -131,6 +145,13 @@ export default {
 </script>
 
 <style>
+.errorArticle{
+  width: 100%;
+  margin-top: 135px;
+  text-align: center;
+  font-size: 20px;
+}
+
 .blog {
   width: 700px;
   margin: 25px auto;

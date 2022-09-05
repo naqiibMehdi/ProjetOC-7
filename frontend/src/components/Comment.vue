@@ -10,6 +10,7 @@
   <div :data-id="id" class="validateComment" v-else>
     <Textarea name="description" id="description" cols="30" rows="3" v-model="comment" />
     <ButtonPrime label="Valider" class="p-button-raised p-button-success" @click="validateComment(comment, id)"/>
+    <span v-show="errorComment" class="p-error">{{ errorComment }}</span>
   </div>
 </template>
 
@@ -27,7 +28,8 @@ export default {
     return {
       show: true,
       isAdmin: null,
-      comment: ""
+      comment: "",
+      errorComment: ""
     }
   },
   mounted(){
@@ -60,20 +62,15 @@ export default {
 
       this.$store.dispatch("updateComment", {id, data})
       .then(() => this.show = true)
+      .catch(err => this.errorComment = err.response.data)
       
     },
 
     updateComment(id){
        this.show = false
-      axios.get(`http://localhost:3000/api/comment/${id}`,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        })
-        .then((res) => {
-          this.comment = res.data.description
-        })
-        .catch((err) => console.log(err));
+
+       this.$store.dispatch("setOneComment", id)
+       .then(() => this.comment = this.$store.state.oneComment.description)
       
     }
   }
